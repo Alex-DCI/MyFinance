@@ -11,13 +11,11 @@ import java.util.List;
 
 public class CustomSpinnerAdapter extends BaseAdapter {
 
-    private Context context;
-    private List<String> categoriesList;
+    private final List<String> categoriesList;
     LayoutInflater inflater;
 
     public CustomSpinnerAdapter(Context context, List<String> categoriesList) {
         super();
-        this.context=context;
         this.categoriesList = categoriesList;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }

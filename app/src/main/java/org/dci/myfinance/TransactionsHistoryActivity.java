@@ -2,7 +2,6 @@ package org.dci.myfinance;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;

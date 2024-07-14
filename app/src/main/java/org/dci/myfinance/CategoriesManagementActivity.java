@@ -43,6 +43,7 @@ public class CategoriesManagementActivity extends AppCompatActivity {
         categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView);
         ImageView backButton = findViewById(R.id.backImage);
 
+        backButton.setOnClickListener(v -> finish());
         context = this;
         filesOperations = FilesOperations.getInstance();
         isIncome = false;

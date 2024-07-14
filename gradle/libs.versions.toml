@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.0"
+agp = "8.5.1"
 appcompatV7 = "28.0.0"
 jacksonDatabind = "2.17.2"
 jacksonDatatypeJsr310 = "2.17.2"
@@ -13,8 +13,6 @@ constraintlayout = "2.1.4"
 materialVersion = "1.13.0-alpha04"
 
 [libraries]
-appcompat-v7 = { module = "com.android.support:appcompat-v7", version.ref = "appcompatV7" }
-design = { module = "com.android.support:design", version.ref = "appcompatV7" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonDatabind" }
 jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jacksonDatatypeJsr310" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

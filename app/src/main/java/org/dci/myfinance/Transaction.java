@@ -10,6 +10,26 @@ public class Transaction implements Comparable<Transaction>, Serializable {
     private String category;
     private LocalDateTime dateTime;
 
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIncome(boolean income) {
+        isIncome = income;
+    }
+
     public Transaction(double amount, String category, LocalDateTime dateTime, String description, boolean isIncome) {
         this.category = category;
         this.dateTime = dateTime;

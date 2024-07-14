@@ -20,6 +20,9 @@
             android:layout_width="50sp"
             android:layout_height="50sp"
             android:contentDescription="@string/goBack"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/baseline_arrow_back_24"
             tools:srcCompat="@drawable/baseline_arrow_back_24" />
 

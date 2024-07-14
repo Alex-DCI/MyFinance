@@ -2,24 +2,19 @@ package org.dci.myfinance;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -120,8 +115,6 @@ public class EditTransactionActivity extends AppCompatActivity {
             categories.add(transaction.getCategory());
         }
         CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(this, categories);
-        ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(
-                this, R.layout.custom_spinner_item, categories);
         spinner.setAdapter(adapter);
         spinner.setSelection(categories.indexOf(transaction.getCategory()));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -256,12 +249,4 @@ public class EditTransactionActivity extends AppCompatActivity {
         }
         return amount;
     }
-
-    public int getScreenWidth() {
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        return displaymetrics.widthPixels;
-    }
-
-
 }
