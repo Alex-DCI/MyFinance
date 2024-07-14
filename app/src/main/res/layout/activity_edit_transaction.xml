@@ -146,7 +146,7 @@
             android:layout_width="wrap_content"
             android:layout_height="55sp"
             app:layout_constraintBottom_toTopOf="@+id/descriptionEditText"
-            app:layout_constraintStart_toEndOf="@+id/categoryTextView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/timeLayout" />
 
         <EditText
