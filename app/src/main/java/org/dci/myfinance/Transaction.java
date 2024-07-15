@@ -1,5 +1,7 @@
 package org.dci.myfinance;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -77,14 +79,4 @@ public class Transaction implements Comparable<Transaction>, Serializable {
         return Objects.hash(isIncome, amount, description, category, dateTime);
     }
 
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "amount=" + amount +
-                ", isIncome=" + isIncome +
-                ", description='" + description + '\'' +
-                ", category='" + category + '\'' +
-                ", dateTime=" + dateTime +
-                '}';
-    }
 }

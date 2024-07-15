@@ -121,13 +121,14 @@ public class EditTransactionActivity extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 EditTransactionActivity.this,
-                android.R.style.Theme_DeviceDefault_Light_Dialog_MinWidth,
+                android.R.style.Theme_DeviceDefault_Dialog_MinWidth,
                 (view, year1, monthOfYear, dayOfMonth) -> {
                     LocalDate newDateValue = LocalDate.of(year1, monthOfYear + 1, dayOfMonth);
                     editDate.setText(newDateValue.format(dateFormatter));
                 },
                 year, month, day);
-        datePickerDialog.show();
+        datePickerDialog
+                .show();
     }
 
     private void showTimePickerDialog() {
@@ -197,7 +198,6 @@ public class EditTransactionActivity extends AppCompatActivity {
         }
 
         Toast.makeText(this, "Transaction saved.", Toast.LENGTH_SHORT).show();
-        Log.d("transactionTest", transaction.toString());
         finish();
     }
 
@@ -223,6 +223,10 @@ public class EditTransactionActivity extends AppCompatActivity {
 
     private double checkAmount() {
         String amountString = amountTextView.getText().toString();
+        if (!amountString.matches("\\d*\\.?\\d{1,2} *[€$]?")) {
+            amountTextView.setError(getResources().getString(R.string.checkAmount));
+            return 0;
+        }
         if (amountString.endsWith("€")) {
             amountString = amountString.substring(0, amountString.length() - 1).trim();
         }

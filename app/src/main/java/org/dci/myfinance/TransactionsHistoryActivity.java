@@ -73,7 +73,9 @@ public class TransactionsHistoryActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         setAdapter();
+        setCurrentBalance();
     }
 
     private List<Transaction> getCurrentList() {

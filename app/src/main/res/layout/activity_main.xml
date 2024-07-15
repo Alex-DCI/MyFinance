@@ -49,13 +49,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="60sp"
-        android:layout_marginTop="75dp"
-        android:layout_marginRight="60sp"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="60dp"
         android:orientation="horizontal"
         android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/transactionsHistoryButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/amountTextView">
