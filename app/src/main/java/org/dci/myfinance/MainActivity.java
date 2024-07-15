@@ -12,7 +12,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+    TextView amountTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         TextView greetingsText = findViewById(R.id.greetingsText);
-        TextView amountTextView = findViewById(R.id.amountTextView);
+        amountTextView = findViewById(R.id.amountTextView);
         ImageView addIncomeImage = findViewById(R.id.addCircleImage);
         ImageView addExpenseImage = findViewById(R.id.removeCircleImage);
         Button transactionsHistoryButton = findViewById(R.id.transactionsHistoryButton);
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         Button profilesManagementButton = findViewById(R.id.profileManagementButton);
         Button supportButton = findViewById(R.id.supportButton);
 
+        setAmountValue();
         greetingsText.setText(R.string.welcome);
 
         categoriesManagemenButton.setOnClickListener(v -> {
@@ -57,5 +61,21 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("isIncome", "true");
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setAmountValue();
+    }
+
+    private void setAmountValue() {
+        List<Transaction> transactionsList = FilesOperations.getInstance().getTransactions(this);
+        double amount = 0;
+        for (Transaction transaction : transactionsList) {
+            amount += transaction.isIncome() ? transaction.getAmount() : -transaction.getAmount();
+        }
+        String amountString = amount + getResources().getString(R.string.euro);
+        amountTextView.setText(amountString);
     }
 }
