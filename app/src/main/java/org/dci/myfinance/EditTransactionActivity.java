@@ -183,6 +183,7 @@ public class EditTransactionActivity extends AppCompatActivity {
 
         List<Transaction> fullTransactionsList = filesOperations.getTransactions(this);
         int index = fullTransactionsList.indexOf(transaction);
+        fullTransactionsList.remove(transaction);
 
         transaction.setAmount(amount);
         transaction.setCategory(String.valueOf(spinner.getSelectedItem()));
@@ -190,11 +191,11 @@ public class EditTransactionActivity extends AppCompatActivity {
         transaction.setDescription(String.valueOf(descriptionEditText.getText()));
         transaction.setIncome(incomeRadio.isChecked());
 
-        fullTransactionsList.set(index, transaction);
-        filesOperations.setTransactions(this, fullTransactionsList);
-
-        if (!dateTime.isEqual(transaction.getDateTime())) {
-            filesOperations.sortTransactions(this);
+        for (int i = fullTransactionsList.size() - 1; i >= 0; i--) {
+            if (transaction.getDateTime().isAfter(fullTransactionsList.get(i).getDateTime())) {
+                fullTransactionsList.add(i, transaction);
+                break;
+            }
         }
 
         Toast.makeText(this, "Transaction saved.", Toast.LENGTH_SHORT).show();
@@ -227,7 +228,7 @@ public class EditTransactionActivity extends AppCompatActivity {
             amountTextView.setError(getResources().getString(R.string.checkAmount));
             return 0;
         }
-        if (amountString.endsWith("€")) {
+        if (amountString.endsWith("€") || amountString.endsWith("$")) {
             amountString = amountString.substring(0, amountString.length() - 1).trim();
         }
         double amount;

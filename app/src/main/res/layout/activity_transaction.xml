@@ -42,7 +42,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout3"
+        android:id="@+id/radioLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,16 +83,16 @@
         android:paddingHorizontal="5sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+        app:layout_constraintTop_toBottomOf="@+id/radioLayout">
 
         <EditText
             android:id="@+id/amountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/editTransactionAmount"
+            android:hint="@string/amount"
             android:inputType="number"
             android:textAlignment="center"
-            android:textSize="28sp"
+            android:textSize="25sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="false"
-                android:hint="@string/editTransactionDate"
+                android:hint="@string/transactionDate"
                 android:inputType="none"
                 android:textSize="20sp" />
 
@@ -136,7 +136,7 @@
                 android:layout_margin="5sp"
                 android:clickable="true"
                 android:focusable="false"
-                android:hint="@string/editTransactionTime"
+                android:hint="@string/transactionTime"
                 android:inputType="none"
                 android:textSize="20sp" />
 
@@ -168,7 +168,7 @@
             android:layout_margin="5sp"
             android:ems="10"
             android:gravity="start|top"
-            android:hint="@string/editTransactionDescription"
+            android:hint="@string/transactionDescription"
             android:inputType="textMultiLine"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"

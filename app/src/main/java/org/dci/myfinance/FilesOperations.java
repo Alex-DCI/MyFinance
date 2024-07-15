@@ -76,12 +76,6 @@ public class FilesOperations {
         }
     }
 
-    public void sortTransactions(Context context) {
-        List<Transaction> transactionsList = getTransactions(context);
-        Collections.sort(transactionsList);
-        setTransactions(context, transactionsList);
-    }
-
     public List<String> getCategories(Context context, boolean isIncome) {
         ContextWrapper contextWrapper = new ContextWrapper(context);
         File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
