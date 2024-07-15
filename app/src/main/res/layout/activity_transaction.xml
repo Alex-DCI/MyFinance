@@ -27,11 +27,11 @@
             app:srcCompat="@drawable/baseline_arrow_back_24"
             tools:srcCompat="@drawable/baseline_arrow_back_24" />
 
-         <TextView
+        <TextView
+            android:id="@+id/activityView"
             android:layout_width="0dp"
             android:layout_height="30sp"
             android:singleLine="true"
-            android:text="@string/editTransaction"
             android:textAlignment="center"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -53,25 +53,25 @@
             android:id="@+id/isIncomeRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:orientation="horizontal">
+            app:layout_constraintTop_toTopOf="parent">
 
             <RadioButton
-                android:textSize="18sp"
                 android:id="@+id/incomeRadio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/income" />
+                android:text="@string/income"
+                android:textSize="18sp" />
 
             <RadioButton
-                android:textSize="18sp"
                 android:id="@+id/expenseRadio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/expense" />
+                android:text="@string/expense"
+                android:textSize="18sp" />
         </RadioGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -89,7 +89,6 @@
             android:id="@+id/amountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="@string/editTransactionAmount"
             android:inputType="number"
             android:textAlignment="center"
@@ -103,56 +102,70 @@
             android:id="@+id/dateLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5sp"
             app:layout_constraintBottom_toTopOf="@+id/timeLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/amountTextView">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dateEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/dateEditText"
-                android:focusable="false"
                 android:clickable="true"
+                android:focusable="false"
+                android:hint="@string/editTransactionDate"
                 android:inputType="none"
-                android:textSize="20sp"
-                android:hint="@string/editTransactionDate"/>
+                android:textSize="20sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
             android:id="@+id/timeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/spinner"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dateLayout"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toBottomOf="@+id/dateLayout">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/timeEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/timeEditText"
-                android:focusable="false"
+                android:layout_margin="5sp"
                 android:clickable="true"
+                android:focusable="false"
+                android:hint="@string/editTransactionTime"
                 android:inputType="none"
-                android:textSize="20sp"
-                android:hint="@string/editTransactionTime"/>
+                android:textSize="20sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <Spinner
             android:id="@+id/spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="55sp"
+            android:layout_margin="5sp"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingStart="10sp"
+            android:paddingEnd="10sp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textAlignment="textStart"
+            android:textSize="22sp"
             app:layout_constraintBottom_toTopOf="@+id/descriptionEditText"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="0.3"
+            app:layout_constraintStart_toEndOf="@+id/categoryTextView"
             app:layout_constraintTop_toBottomOf="@+id/timeLayout" />
 
         <EditText
             android:id="@+id/descriptionEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5sp"
             android:ems="10"
             android:gravity="start|top"
             android:hint="@string/editTransactionDescription"
@@ -160,17 +173,17 @@
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             tools:ignore="Autofill" />
 
         <TextView
             android:id="@+id/categoryTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/category"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/spinner"
-            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintHorizontal_weight="0.3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/timeLayout" />
 
@@ -179,6 +192,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">

@@ -64,8 +64,7 @@ public class TransactionsListAdapter extends RecyclerView.Adapter<TransactionsLi
         holder.categoryTextView.setMarqueeRepeatLimit(10);
         holder.categoryTextView.setSelected(true);
 
-        double transactionAmount = currentTransaction.isIncome() ?
-                currentTransaction.getAmount() : -currentTransaction.getAmount();
+        double transactionAmount = currentTransaction.getAmount();
         String amountString = transactionAmount + context.getResources().getString(R.string.euro);
         holder.amountTextView.setText(amountString);
         holder.amountTextView.setTextColor(context.getResources().getColor(

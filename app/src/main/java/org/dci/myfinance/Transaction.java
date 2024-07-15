@@ -2,6 +2,7 @@ package org.dci.myfinance;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Transaction implements Comparable<Transaction>, Serializable {
     private boolean isIncome;
@@ -11,7 +12,7 @@ public class Transaction implements Comparable<Transaction>, Serializable {
     private LocalDateTime dateTime;
 
     public void setAmount(double amount) {
-        this.amount = amount;
+        this.amount = Math.round(amount * 100.0) / 100.0;
     }
 
     public void setCategory(String category) {
@@ -35,7 +36,7 @@ public class Transaction implements Comparable<Transaction>, Serializable {
         this.dateTime = dateTime;
         this.description = description;
         this.isIncome = isIncome;
-        this.amount = isIncome ? amount : -amount;
+        this.amount = amount;
     }
 
     public double getAmount() {
@@ -61,5 +62,29 @@ public class Transaction implements Comparable<Transaction>, Serializable {
     @Override
     public int compareTo(Transaction o) {
         return dateTime.compareTo(o.dateTime);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return isIncome == that.isIncome && Double.compare(amount, that.amount) == 0 && Objects.equals(description, that.description) && Objects.equals(category, that.category) && Objects.equals(dateTime, that.dateTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isIncome, amount, description, category, dateTime);
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "amount=" + amount +
+                ", isIncome=" + isIncome +
+                ", description='" + description + '\'' +
+                ", category='" + category + '\'' +
+                ", dateTime=" + dateTime +
+                '}';
     }
 }

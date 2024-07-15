@@ -32,7 +32,7 @@
     <string name="editTransactionTime">Edit Transaction Time</string>
     <string name="editTransactionAmount">Edit Transaction Amount</string>
     <string name="editTransactionDescription">Edit Transaction Description</string>
-    <string name="checkTime">Please check the time format (Ex. 1:23 AM)</string>
+    <string name="checkTime">Please check the time format (Ex. 01:23)</string>
     <string name="checkAmount">Please check the amount format (Ex. 123.45)</string>
-    <string name="checkDate">Please check the date format (Ex. 1 Feb 34)</string>
+    <string name="checkDate">Please check the date format (Ex. 4 Mar 21)</string>
 </resources>

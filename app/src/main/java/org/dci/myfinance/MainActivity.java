@@ -10,7 +10,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;;
+import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         Button profilesManagementButton = findViewById(R.id.profileManagementButton);
         Button supportButton = findViewById(R.id.supportButton);
 
+        greetingsText.setText(R.string.welcome);
+
         categoriesManagemenButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CategoriesManagementActivity.class);
             startActivity(intent);
@@ -44,11 +46,21 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        greetingsText.setText(R.string.welcome);
+        addExpenseImage.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AddTransaction.class);
+            intent.putExtra("isIncome", "false");
+            startActivity(intent);
+        });
+
+        addIncomeImage.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AddTransaction.class);
+            intent.putExtra("isIncome", "true");
+            startActivity(intent);
+        });
 
 //        List<Transaction> transactionList = new ArrayList<>();
-//        transactionList.add(new Transaction(50, "Very very long category name, so that it doesn't fit one line", "Test Description", false));
-//        transactionList.add(new Transaction(100.1, "Test Income", "Let's see...", true));
+//        transactionList.add(new Transaction(50, "Very very long category name, so that it doesn't fit one line", LocalDateTime.now(), "Test Description", false));
+//        transactionList.add(new Transaction(100.1, "Test Income", LocalDateTime.now(),"Let's see...", true));
 //
 //        FilesOperations.getInstance().setTransactions(this, transactionList);
     }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -15,15 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class TransactionsHistoryActivity extends AppCompatActivity {
-    private List<Transaction> transactionList;
     private TabLayout tabLayout;
     private RecyclerView recyclerView;
-    private FilesOperations filesOperations;
+    TextView currentBalance;
+    List<Transaction> transactionsList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,25 +35,13 @@ public class TransactionsHistoryActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabLayout);
         recyclerView = findViewById(R.id.recyclerView);
-        TextView currentBalance = findViewById(R.id.currentBalance);
-        filesOperations = FilesOperations.getInstance();
-        transactionList = filesOperations.getTransactions(this);
-
-        double amount = 0;
-
-        for (Transaction transaction : transactionList) {
-            amount += transaction.getAmount();
-        }
-
-        amount = Math.round(amount * 100.0) / 100.0;
-        String balanceText = getResources().getString(R.string.balance) + (amount == Math.floor(amount) ? "" + (int) amount : amount) +
-                getResources().getString(R.string.euro);
-        currentBalance.setText(balanceText);
-
+        currentBalance = findViewById(R.id.currentBalance);
         findViewById(R.id.backImage).setOnClickListener(v -> this.finish());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         setAdapter();
+        setCurrentBalance();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -80,30 +66,26 @@ public class TransactionsHistoryActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
-        }
-        );
+        });
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setAdapter();
+    }
+
     private List<Transaction> getCurrentList() {
-        List<Transaction> currentList = new ArrayList<>();
+        transactionsList = FilesOperations.getInstance().getTransactions(this);
         switch (tabLayout.getSelectedTabPosition()) {
-            case 0: currentList = transactionList;
-                break;
-            case 1: for (Transaction transaction : transactionList) {
-                if (!transaction.isIncome()) {
-                    currentList.add(transaction);
-                }
-            }
-                break;
-            case 2: for (Transaction transaction : transactionList) {
-                if (transaction.isIncome()) {
-                    currentList.add(transaction);
-                }
-            }
-                break;
+            case 0: break;
+            case 1: transactionsList.removeIf(Transaction::isIncome);
+                        break;
+            case 2: transactionsList.removeIf(transaction -> !transaction.isIncome());
+                        break;
         }
-        return currentList;
+        return transactionsList;
     }
 
     public void setAdapter() {
@@ -116,24 +98,17 @@ public class TransactionsHistoryActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Transaction toReplace;
-        Transaction newTransaction;
-        try {
-            assert data != null;
-            toReplace = (Transaction) Objects.requireNonNull(data.getExtras()).getSerializable("toReplace");
-            newTransaction = (Transaction) data.getExtras().getSerializable("newTransaction");
-        } catch (NullPointerException e) {
-            throw new RuntimeException(e);
+    private void setCurrentBalance() {
+        double amount = 0;
+        for (Transaction transaction : transactionsList) {
+            if (transaction.isIncome()) {
+                amount += transaction.getAmount();
+            } else {
+                amount -= transaction.getAmount();
+            }
         }
-
-        transactionList.set(transactionList.indexOf(toReplace), newTransaction);
-        filesOperations.sortTransactions(this);
-        setAdapter();
+        String balanceText = getResources().getString(R.string.balance) +
+                Math.round(amount * 100.0) / 100.0 + getResources().getString(R.string.euro);
+        currentBalance.setText(balanceText);
     }
-
-
 }

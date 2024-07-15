@@ -2,17 +2,17 @@ package org.dci.myfinance;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
+
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -40,12 +40,13 @@ public class EditTransactionActivity extends AppCompatActivity {
     private DateTimeFormatter timeFormatter;
     private EditText descriptionEditText;
     private RadioButton incomeRadio;
+    private LocalDateTime dateTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_edit_transaction);
+        setContentView(R.layout.activity_transaction);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -59,7 +60,6 @@ public class EditTransactionActivity extends AppCompatActivity {
 
         Button cancelButton = findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(v -> this.finish());
-
         ImageView backImage = findViewById(R.id.backImage);
         backImage.setOnClickListener(v -> this.finish());
 
@@ -71,74 +71,57 @@ public class EditTransactionActivity extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
         descriptionEditText = findViewById(R.id.descriptionEditText);
         incomeRadio = findViewById(R.id.incomeRadio);
+        TextView activityView = findViewById(R.id.activityView);
 
         dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
-        timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
+        timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        dateTime = transaction.getDateTime();
 
         assert transaction != null;
-        double transactionAmount = transaction.isIncome() ? transaction.getAmount() : -transaction.getAmount();
+        double transactionAmount = transaction.getAmount();
         String amountString = transactionAmount + getResources().getString(R.string.euro);
         amountTextView.setText(amountString);
 
-        descriptionEditText.setText(transaction.getDescription());
+        isIncomeRadioGroup.check(transaction.isIncome() ? R.id.incomeRadio : R.id.expenseRadio);
+        setSpinnerAdapter(transaction.isIncome());
 
-        if (transaction.isIncome()) {
-            isIncomeRadioGroup.check(R.id.incomeRadio);
-            setSpinnerAdapter(0);
-        } else {
-            isIncomeRadioGroup.check(R.id.expenseRadio);
-            setSpinnerAdapter(1);
-        }
-
-
-
-        isIncomeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> setSpinnerAdapter(checkedId));
-
-        //TODO - check if month is correct
-
+        isIncomeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> setSpinnerAdapter(checkedId == 0));
         LocalDateTime dateTime = transaction.getDateTime();
-        editDate.setText(dateTime.format(dateFormatter));
-        editDate.setOnClickListener(v -> showDatePickerDialog(dateTime));
 
-        editTime.setText(dateTime.format(timeFormatter));
-        editTime.setOnClickListener(v -> showTimePickerDialog(dateTime));
-
+        editDate.setOnClickListener(v -> showDatePickerDialog());
+        editTime.setOnClickListener(v -> showTimePickerDialog());
         applyButton.setOnClickListener(v -> validateInput());
+
+        activityView.setText(getResources().getString(R.string.editTransaction));
+        editTime.setText(dateTime.format(timeFormatter));
+        editDate.setText(dateTime.format(dateFormatter));
+        descriptionEditText.setText(transaction.getDescription());
     }
 
-    private void setSpinnerAdapter(int checkedID) {
+    private void setSpinnerAdapter(boolean isIncome) {
 
-        List<String> categories = filesOperations.getCategories(this, checkedID == 0);
+        List<String> categories = filesOperations.getCategories(this, isIncome);
         if (!categories.contains(transaction.getCategory())) {
             categories.add(transaction.getCategory());
         }
-        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(this, categories);
-        spinner.setAdapter(adapter);
-        spinner.setSelection(categories.indexOf(transaction.getCategory()));
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = adapter.getItem(position);
-                Toast.makeText(EditTransactionActivity.this, "Selected: " + selectedItem, Toast.LENGTH_SHORT).show();
-                Log.d("SpinnerSelection", "Selected item: " + selectedItem);
-            }
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
+                this, R.layout.custom_spinner_item, categories);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d("SpinnerSelection", "Nothing selected");
-            }
-        });
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setSelection(categories.indexOf(transaction.getCategory()));
+
     }
 
-    private void showDatePickerDialog(LocalDateTime localDateTime) {
-        LocalDate oldDateValue = localDateTime.toLocalDate();
+    private void showDatePickerDialog() {
+
+        LocalDate oldDateValue = dateTime.toLocalDate();
         int year = oldDateValue.getYear();
-        int month = oldDateValue.getMonthValue();
+        int month = oldDateValue.getMonthValue() - 1;
         int day = oldDateValue.getDayOfMonth();
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 EditTransactionActivity.this,
-                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                android.R.style.Theme_DeviceDefault_Light_Dialog_MinWidth,
                 (view, year1, monthOfYear, dayOfMonth) -> {
                     LocalDate newDateValue = LocalDate.of(year1, monthOfYear + 1, dayOfMonth);
                     editDate.setText(newDateValue.format(dateFormatter));
@@ -147,9 +130,9 @@ public class EditTransactionActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void showTimePickerDialog(LocalDateTime localDateTime) {
-        LocalTime oldTimeValue = localDateTime.toLocalTime();
+    private void showTimePickerDialog() {
 
+        LocalTime oldTimeValue = dateTime.toLocalTime();
         int oldHour = oldTimeValue.getHour();
         int oldMinute = oldTimeValue.getMinute();
 
@@ -161,7 +144,7 @@ public class EditTransactionActivity extends AppCompatActivity {
                 },
                 oldHour,
                 oldMinute,
-                false);
+                true);
 
         timePickerDialog.show();
     }
@@ -197,20 +180,24 @@ public class EditTransactionActivity extends AppCompatActivity {
             }
         }
 
-        Intent intent = new Intent();
-        intent.putExtra("toReplace", transaction);
+        List<Transaction> fullTransactionsList = filesOperations.getTransactions(this);
+        int index = fullTransactionsList.indexOf(transaction);
 
-        Transaction newTransaction = new Transaction(
-                amount,
-                (String)spinner.getSelectedItem(),
-                LocalDateTime.of(date, time),
-                descriptionEditText.getText().toString(),
-                incomeRadio.isChecked()
-        );
-        intent.putExtra("newTransaction", newTransaction);
+        transaction.setAmount(amount);
+        transaction.setCategory(String.valueOf(spinner.getSelectedItem()));
+        transaction.setDateTime(LocalDateTime.of(date, time));
+        transaction.setDescription(String.valueOf(descriptionEditText.getText()));
+        transaction.setIncome(incomeRadio.isChecked());
+
+        fullTransactionsList.set(index, transaction);
+        filesOperations.setTransactions(this, fullTransactionsList);
+
+        if (!dateTime.isEqual(transaction.getDateTime())) {
+            filesOperations.sortTransactions(this);
+        }
 
         Toast.makeText(this, "Transaction saved.", Toast.LENGTH_SHORT).show();
-        setResult(0, intent);
+        Log.d("transactionTest", transaction.toString());
         finish();
     }
 
@@ -237,7 +224,7 @@ public class EditTransactionActivity extends AppCompatActivity {
     private double checkAmount() {
         String amountString = amountTextView.getText().toString();
         if (amountString.endsWith("€")) {
-            amountString = amountString.substring(0, amountString.lastIndexOf(' '));
+            amountString = amountString.substring(0, amountString.length() - 1).trim();
         }
         double amount;
         try {
