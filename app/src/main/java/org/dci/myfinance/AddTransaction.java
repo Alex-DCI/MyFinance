@@ -3,6 +3,7 @@ package org.dci.myfinance;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -162,16 +164,12 @@ public class AddTransaction extends AppCompatActivity {
                 String.valueOf(descriptionEditText.getText()),
                 isIncome);
 
+
         List<Transaction> fullTransactionsList = filesOperations.getTransactions(this);
-        for (int i = fullTransactionsList.size() - 1; i >= 0; i--) {
-            if (transaction.getDateTime().isAfter(fullTransactionsList.get(i).getDateTime())) {
-                fullTransactionsList.add(i, transaction);
-                break;
-            }
-        }
+        fullTransactionsList.add(0, transaction);
+        Collections.sort(fullTransactionsList);
 
         filesOperations.setTransactions(this, fullTransactionsList);
-
         Toast.makeText(this, "Transaction saved.", Toast.LENGTH_SHORT).show();
         finish();
     }

@@ -63,7 +63,7 @@ public class Transaction implements Comparable<Transaction>, Serializable {
 
     @Override
     public int compareTo(Transaction o) {
-        return dateTime.compareTo(o.dateTime);
+        return o.dateTime.compareTo(dateTime);
     }
 
     @Override
@@ -78,5 +78,4 @@ public class Transaction implements Comparable<Transaction>, Serializable {
     public int hashCode() {
         return Objects.hash(isIncome, amount, description, category, dateTime);
     }
-
 }

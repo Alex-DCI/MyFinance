@@ -12,10 +12,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -61,11 +57,5 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("isIncome", "true");
             startActivity(intent);
         });
-
-        List<Transaction> transactionList = new ArrayList<>();
-        transactionList.add(new Transaction(50, "Very very long category name, so that it doesn't fit one line", LocalDateTime.now(), "Test Description", false));
-        transactionList.add(new Transaction(100.1, "Test Income", LocalDateTime.now(),"Let's see...", true));
-
-        FilesOperations.getInstance().setTransactions(this, transactionList);
     }
 }
