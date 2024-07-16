@@ -16,6 +16,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     TextView amountTextView;
+    TextView greetingsText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        TextView greetingsText = findViewById(R.id.greetingsText);
+        greetingsText = findViewById(R.id.greetingsText);
         amountTextView = findViewById(R.id.amountTextView);
         ImageView addIncomeImage = findViewById(R.id.addCircleImage);
         ImageView addExpenseImage = findViewById(R.id.removeCircleImage);
@@ -37,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
         Button profilesManagementButton = findViewById(R.id.profileManagementButton);
         Button supportButton = findViewById(R.id.supportButton);
 
+        setGreeting();
         setAmountValue();
-        greetingsText.setText(R.string.welcome);
 
         categoriesManagemenButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CategoriesManagementActivity.class);
@@ -61,12 +62,23 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("isIncome", "true");
             startActivity(intent);
         });
+
+        profilesManagementButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ProfileManagementActivity.class);
+            startActivity(intent);
+        });
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setAmountValue();
+        setGreeting();
+    }
+
+    private void setGreeting() {
+
     }
 
     private void setAmountValue() {
@@ -75,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
         for (Transaction transaction : transactionsList) {
             amount += transaction.isIncome() ? transaction.getAmount() : -transaction.getAmount();
         }
-        String amountString = amount + getResources().getString(R.string.euro);
+        String amountString = getResources().getString(R.string.balance) +
+                Math.round(amount * 100.0) / 100.0 + getResources().getString(R.string.euro);
         amountTextView.setText(amountString);
     }
 }
