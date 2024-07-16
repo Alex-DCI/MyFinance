@@ -133,7 +133,7 @@ public class FilesOperations {
     private void createCategoriesFile(Context context) {
         ContextWrapper contextWrapper = new ContextWrapper(context);
         File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
-        File file =  new File(directory, "categories.json");
+        File file = new File(directory, "categories.json");
 
         try (FileWriter writer = new FileWriter(file)) {
             JSONObject rootNode = new JSONObject();
@@ -150,7 +150,7 @@ public class FilesOperations {
         ObjectMapper mapper = new ObjectMapper();
         ContextWrapper contextWrapper = new ContextWrapper(context);
         File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
-        File file =  new File(directory, "profile.json");
+        File file = new File(directory, "profile.json");
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
         try (FileOutputStream fos = new FileOutputStream(file)) {
@@ -160,21 +160,18 @@ public class FilesOperations {
         }
     }
 
-    public ProfileManagementActivity.Profile getProfile(Context context) {
+    public JsonNode readProfile(Context context) {
         ContextWrapper contextWrapper = new ContextWrapper(context);
         File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
         File file = new File(directory, "profile.json");
-        ProfileManagementActivity.Profile profile;
+
+        JsonNode profileNode;
         try (InputStream stream = Files.newInputStream(file.toPath())) {
-            JsonNode profileNode = new ObjectMapper().readTree(stream);
-            profile = new ProfileManagementActivity.Profile(
-                    context,
-                    profileNode.get("email").asText(),
-                    profileNode.get("name").asText(),
-                    profileNode.get("picture").asText());
+            profileNode = new ObjectMapper().readTree(stream);
+
         } catch (IOException e) {
             return null;
         }
-        return profile;
+        return profileNode;
     }
 }

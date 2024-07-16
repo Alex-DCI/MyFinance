@@ -40,4 +40,7 @@
     <string name="enterName">Enter your name</string>
     <string name="enterEmail">Enter your E-Mail</string>
     <string name="profileManagement">Profile Management</string>
+    <string name="lettersAmountError">The name must contain 3 to 15 letters</string>
+    <string name="charsSetError">The name must only contain letters, numbers and underscore</string>
+    <string name="emailIsInvalid">The entered email is incorrect</string>
 </resources>

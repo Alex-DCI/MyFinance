@@ -29,6 +29,7 @@
             android:id="@+id/applyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="@string/apply"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -92,7 +93,7 @@
             tools:srcCompat="@tools:sample/avatars" />
 
         <ImageView
-            android:id="@+id/editPicture"
+            android:id="@+id/editPictureIcon"
             android:layout_width="50sp"
             android:layout_height="50sp"
             android:layout_marginStart="5dp"
