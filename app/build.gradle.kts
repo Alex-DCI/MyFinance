@@ -43,5 +43,4 @@ dependencies {
     implementation(libs.jackson.databind)
     implementation(libs.jackson.datatype.jsr310)
     runtimeOnly(libs.material.v1130alpha04)
-
 }

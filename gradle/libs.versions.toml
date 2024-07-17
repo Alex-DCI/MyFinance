@@ -7,22 +7,27 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
+lollipin = "2.0.0"
+lollipinVersion = "2.1.0"
 material = "1.12.0"
 activity = "1.9.0"
 constraintlayout = "2.1.4"
 materialVersion = "1.13.0-alpha04"
 
 [libraries]
+appcompat-v7 = { module = "com.android.support:appcompat-v7", version.ref = "appcompatV7" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonDatabind" }
 jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jacksonDatatypeJsr310" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+lollipin = { module = "com.github.orangegangsters:lollipin", version.ref = "lollipin" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 material-v1130alpha04 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
+omadahealth-lollipin = { module = "com.github.omadahealth:lollipin", version.ref = "lollipinVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

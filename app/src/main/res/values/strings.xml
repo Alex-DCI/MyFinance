@@ -43,4 +43,9 @@
     <string name="lettersAmountError">The name must contain 3 to 15 letters</string>
     <string name="charsSetError">The name must only contain letters, numbers and underscore</string>
     <string name="emailIsInvalid">The entered email is incorrect</string>
+    <string name="chooseAnImageSource">Choose an Image Source</string>
+    <string name="enter">Enter</string>
+    <string name="enter_your_pin_code">Enter Your Pin Code</string>
+    <string name="clear">Clear</string>
+    <string name="backspace">backspace</string>
 </resources>

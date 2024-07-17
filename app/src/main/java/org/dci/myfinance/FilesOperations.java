@@ -146,32 +146,39 @@ public class FilesOperations {
         }
     }
 
-    public void setProfile(Context context, ProfileManagementActivity.Profile profile) {
+    public void saveProfile(Context context, List<ProfileManagementActivity.Profile> profilesList) {
         ObjectMapper mapper = new ObjectMapper();
         ContextWrapper contextWrapper = new ContextWrapper(context);
         File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
-        File file = new File(directory, "profile.json");
-        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        File file =  new File(directory, "profiles.json");
 
         try (FileOutputStream fos = new FileOutputStream(file)) {
-            fos.write(mapper.writeValueAsBytes(profile));
+            fos.write(mapper.writeValueAsBytes(profilesList));
         }  catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public JsonNode readProfile(Context context) {
+    public List<ProfileManagementActivity.Profile> readProfiles(Context context) {
         ContextWrapper contextWrapper = new ContextWrapper(context);
         File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
-        File file = new File(directory, "profile.json");
+        File file =  new File(directory, "profiles.json");
+        List<ProfileManagementActivity.Profile> profilesList = new ArrayList<>();
 
-        JsonNode profileNode;
         try (InputStream stream = Files.newInputStream(file.toPath())) {
-            profileNode = new ObjectMapper().readTree(stream);
+            JsonNode rootNode = new ObjectMapper().readTree(stream);
 
+            for (JsonNode profile : rootNode) {
+                profilesList.add(new ProfileManagementActivity.Profile(
+                        profile.get("name").asText(),
+                        profile.get("email").asText(),
+                        profile.get("picture").asText(),
+                        profile.get("pinCode").asInt()
+                ));
+            }
         } catch (IOException e) {
-            return null;
+            return profilesList;
         }
-        return profileNode;
+        return profilesList;
     }
 }
