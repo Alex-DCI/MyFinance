@@ -17,9 +17,10 @@ import androidx.core.view.WindowInsetsCompat;
 import java.util.ArrayList;
 
 public class StartActivity extends AppCompatActivity {
-    Button enterButton;
-    ArrayList<Integer> input;
-    ImageView[] pinChars;
+    private Button enterButton;
+    private ArrayList<Integer> input;
+    private ImageView[] pinChars;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
