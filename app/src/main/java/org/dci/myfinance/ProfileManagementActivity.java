@@ -17,7 +17,6 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class ProfileManagementActivity extends AppCompatActivity {
     public static class Profile implements Serializable {
@@ -66,7 +65,7 @@ public class ProfileManagementActivity extends AppCompatActivity {
         }
     }
 
-    List<Profile> profilesList;
+    Profile profile;
     ImageView profilePicture;
     TextInputEditText nameEdit;
     TextInputEditText emailEdit;
@@ -83,8 +82,8 @@ public class ProfileManagementActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        filesOperations = FilesOperations.getInstance();
-        profilesList = filesOperations.readProfiles(this);
+        filesOperations = FilesOperations.getInstance(this);
+        profile = filesOperations.getProfile();
 
         findViewById(R.id.backImage).setOnClickListener(v -> finish());
         findViewById(R.id.cancelButton).setOnClickListener(v -> finish());
@@ -142,27 +141,26 @@ public class ProfileManagementActivity extends AppCompatActivity {
     }
 
     private void validateInput() {
-//        String name = String.valueOf(nameEdit.getText());
-//        String email = String.valueOf(emailEdit.getText());
-//
-//        if (isEmailValid(email) && isNameValid(name)) {
-//            profile.setProfile(this,
-//                    String.valueOf(nameEdit.getText()),
-//                    String.valueOf(emailEdit.getText()),
+        String name = String.valueOf(nameEdit.getText());
+        String email = String.valueOf(emailEdit.getText());
+
+        if (isEmailValid(email) && isNameValid(name)) {
+            profile.setName(String.valueOf(nameEdit.getText()));
+            profile.setEmail(String.valueOf(emailEdit.getText()));
 //                    profilePicture.getDrawingCache());
-//            applyButton.setEnabled(false);
-//        } else {
-//            if (isNameValid(name)) {
-//                if (name.length() < 3 || name.length() > 15) {
-//                    nameEdit.setError(getResources().getString(R.string.lettersAmountError));
-//                } else {
-//                    nameEdit.setError(getResources().getString(R.string.charsSetError));
-//                }
-//            }
-//            if (!isEmailValid(email)) {
-//                emailEdit.setError(getResources().getString(R.string.emailIsInvalid));
-//            }
-//        }
+            applyButton.setEnabled(false);
+        } else {
+            if (isNameValid(name)) {
+                if (name.length() < 3 || name.length() > 15) {
+                    nameEdit.setError(getResources().getString(R.string.lettersAmountError));
+                } else {
+                    nameEdit.setError(getResources().getString(R.string.charsSetError));
+                }
+            }
+            if (!isEmailValid(email)) {
+                emailEdit.setError(getResources().getString(R.string.emailIsInvalid));
+            }
+        }
     }
 
     private boolean isNameValid(String name) {

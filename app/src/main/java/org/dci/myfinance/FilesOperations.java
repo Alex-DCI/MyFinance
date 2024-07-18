@@ -37,7 +37,7 @@ public class FilesOperations {
         expensesCategories = new ArrayList<>();
         readCategories(context);
 
-        transactions = readTransactions(context);
+        readTransactions(context);
     }
 
     public static synchronized FilesOperations getInstance(Context context) {
@@ -78,16 +78,19 @@ public class FilesOperations {
         writeTransactions(context);
     }
 
-    private List<Transaction> readTransactions(Context context) {
+    private void readTransactions(Context context) {
         ContextWrapper contextWrapper = new ContextWrapper(context);
         File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
         File file = new File(directory, "transaction.json");
-        List<Transaction> transactionsList = new ArrayList<>();
+        transactions = new ArrayList<>();
+        if (!file.exists()) {
+            writeTransactions(context);
+            return;
+        }
         try (InputStream stream = Files.newInputStream(file.toPath())) {
             JsonNode rootNode = new ObjectMapper().readTree(stream);
-
             for (JsonNode transaction : rootNode) {
-                transactionsList.add(new Transaction(
+                transactions.add(new Transaction(
                         transaction.get("amount").asDouble(),
                         transaction.get("category").asText(),
                         LocalDateTime.parse(transaction.get("dateTime").asText()),
@@ -96,16 +99,14 @@ public class FilesOperations {
                 ));
             }
         } catch (IOException e) {
-            return transactionsList;
+            throw new RuntimeException(e);
         }
-        return transactionsList;
     }
 
     private void writeTransactions(Context context) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JSR310Module());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
         ContextWrapper contextWrapper = new ContextWrapper(context);
         File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
         File file = new File(directory, "transaction.json");
@@ -121,24 +122,25 @@ public class FilesOperations {
         ContextWrapper contextWrapper = new ContextWrapper(context);
         File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
         File file = new File(directory, "categories.json");
-
         if (!file.exists()) {
             incomesCategories = List.of("Salary", "Bonus", "Others");
             expensesCategories = List.of("Food", "Transport", "Entertainment", "House", "Children", "Others");
             writeCategories(context);
+            return;
         }
 
         try (InputStream stream = Files.newInputStream(file.toPath())) {
-            JsonNode categoriesNode = new ObjectMapper().readTree(stream).get("incomesCategories");
+            JsonNode rootNode = new ObjectMapper().readTree(stream);
+            JsonNode categoriesNode = rootNode.get("incomesCategories");
             for (JsonNode category : categoriesNode) {
                 incomesCategories.add(category.asText());
             }
-            categoriesNode = new ObjectMapper().readTree(stream).get("expensesCategories");
+            categoriesNode = rootNode.get("expensesCategories");
             for (JsonNode category : categoriesNode) {
                 expensesCategories.add(category.asText());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read categories file");
+            throw new RuntimeException(e);
         }
     }
 
@@ -175,16 +177,20 @@ public class FilesOperations {
         File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
         File file = new File(directory, "profiles.json");
 
+        if (!file.exists()) {
+            profile = new ProfileManagementActivity.Profile(null, null, null, 0);
+            writeProfile(context);
+            return;
+        }
         try (InputStream stream = Files.newInputStream(file.toPath())) {
             JsonNode rootNode = new ObjectMapper().readTree(stream);
-
+            JsonNode pinCodeNode = rootNode.get("pinCode");
             profile = new ProfileManagementActivity.Profile(
-                    rootNode.get("name").asText(),
-                    rootNode.get("email").asText(),
-                    rootNode.get("picture").asText(),
-                    rootNode.get("pinCode").asInt()
+                    rootNode.get("name").asText(null),
+                    rootNode.get("email").asText(null),
+                    rootNode.get("picture").asText(null),
+                    pinCodeNode == null ? 0 : rootNode.get("pinCode").asInt()
             );
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
