@@ -8,7 +8,7 @@
     tools:context=".StartActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout5"
+        android:id="@+id/newPins"
         android:layout_width="200dp"
         android:layout_height="50sp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
@@ -18,42 +18,42 @@
         app:layout_constraintVertical_bias="0.26">
 
         <ImageView
-            android:id="@+id/pinChar0"
+            android:id="@+id/newPin0"
             android:layout_width="35sp"
             android:layout_height="35sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/pinChar1"
+            app:layout_constraintEnd_toStartOf="@+id/newPin1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/circle" />
 
         <ImageView
-            android:id="@+id/pinChar1"
+            android:id="@+id/newPin1"
             android:layout_width="35sp"
             android:layout_height="35sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/pinChar2"
-            app:layout_constraintStart_toEndOf="@id/pinChar0"
+            app:layout_constraintEnd_toStartOf="@+id/newPin2"
+            app:layout_constraintStart_toEndOf="@id/newPin0"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/circle" />
 
         <ImageView
-            android:id="@+id/pinChar2"
+            android:id="@+id/newPin2"
             android:layout_width="35sp"
             android:layout_height="35sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/pinChar3"
-            app:layout_constraintStart_toEndOf="@id/pinChar1"
+            app:layout_constraintEnd_toStartOf="@+id/newPin3"
+            app:layout_constraintStart_toEndOf="@id/newPin1"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/circle" />
 
         <ImageView
-            android:id="@+id/pinChar3"
+            android:id="@+id/newPin3"
             android:layout_width="35sp"
             android:layout_height="35sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/pinChar2"
+            app:layout_constraintStart_toEndOf="@+id/newPin2"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/circle" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -229,6 +229,6 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
+        app:layout_constraintTop_toBottomOf="@+id/newPins" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,9 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -77,6 +80,7 @@ public class EditTransactionActivity extends AppCompatActivity {
         timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         dateTime = transaction.getDateTime();
 
+        amountTextView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         assert transaction != null;
         double transactionAmount = transaction.getAmount();
         String amountString = transactionAmount + getResources().getString(R.string.euro);
@@ -91,6 +95,34 @@ public class EditTransactionActivity extends AppCompatActivity {
         editDate.setOnClickListener(v -> showDatePickerDialog());
         editTime.setOnClickListener(v -> showTimePickerDialog());
         applyButton.setOnClickListener(v -> validateInput());
+        amountTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String input = s.toString();
+                int decimalIndex = input.indexOf(".");
+
+                if (decimalIndex != -1 && input.length() - decimalIndex > 3) {
+                    input = input.substring(0, decimalIndex + 3);
+                    amountTextView.setText(input);
+                    amountTextView.setSelection(input.length());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        amountTextView.setOnClickListener(v -> {
+            String input = amountTextView.getText().toString();
+            if (input.endsWith(" €")) {
+                amountTextView.setText(input.substring(0, input.length() - 2));
+            }
+            amountTextView.selectAll();
+        });
 
         activityView.setText(getResources().getString(R.string.editTransaction));
         editTime.setText(dateTime.format(timeFormatter));
@@ -219,12 +251,9 @@ public class EditTransactionActivity extends AppCompatActivity {
 
     private double checkAmount() {
         String amountString = amountTextView.getText().toString();
-        if (!amountString.matches("\\d*\\.?\\d{1,2} *[€$]?")) {
+        if (!amountString.matches("\\d*\\.?\\d{1,2}")) {
             amountTextView.setError(getResources().getString(R.string.checkAmount));
             return 0;
-        }
-        if (amountString.endsWith("€") || amountString.endsWith("$")) {
-            amountString = amountString.substring(0, amountString.length() - 1).trim();
         }
         double amount;
         try {

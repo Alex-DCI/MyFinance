@@ -3,6 +3,9 @@ package org.dci.myfinance;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -75,12 +78,34 @@ public class AddTransaction extends AppCompatActivity {
         setSpinnerAdapter();
         viewGroup.removeAllViews();
 
+        amountTextView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         activityView.setText(isIncome ? R.string.addIncome : R.string.addExpense);
         dateEditText.setText(dateTime.format(dateFormatter));
         timeEditText.setText(dateTime.format(timeFormatter));
 
         dateEditText.setOnClickListener(v -> showDatePickerDialog());
         timeEditText.setOnClickListener(v -> showTimePickerDialog());
+        amountTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String input = s.toString();
+                int decimalIndex = input.indexOf(".");
+
+                if (decimalIndex != -1 && input.length() - decimalIndex > 3) {
+                    input = input.substring(0, decimalIndex + 3);
+                    amountTextView.setText(input);
+                    amountTextView.setSelection(input.length());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     private void setSpinnerAdapter() {
@@ -196,12 +221,9 @@ public class AddTransaction extends AppCompatActivity {
 
     private double checkAmount() {
         String amountString = amountTextView.getText().toString();
-        if (!amountString.matches("\\d*\\.?\\d{1,2} *[€$]?")) {
+        if (!amountString.matches("\\d*\\.?\\d{1,2}")) {
             amountTextView.setError(getResources().getString(R.string.checkAmount));
             return 0;
-        }
-        if (amountString.endsWith("€") || amountString.endsWith("$")) {
-            amountString = amountString.substring(0, amountString.length() - 1).trim();
         }
         double amount;
         try {

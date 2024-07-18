@@ -2,7 +2,9 @@ package org.dci.myfinance;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -163,7 +165,13 @@ public class FilesOperations {
         ObjectMapper mapper = new ObjectMapper();
         ContextWrapper contextWrapper = new ContextWrapper(context);
         File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
-        File file = new File(directory, "profiles.json");
+        File file = new File(directory, "profile.json");
+
+        try {
+            Log.d("ProfileSerialization", "Profile data: " + mapper.writeValueAsString(profile));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
         try (FileOutputStream fos = new FileOutputStream(file)) {
             fos.write(mapper.writeValueAsBytes(profile));
@@ -175,22 +183,25 @@ public class FilesOperations {
     private void readProfile(Context context) {
         ContextWrapper contextWrapper = new ContextWrapper(context);
         File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
-        File file = new File(directory, "profiles.json");
+        File file = new File(directory, "profile.json");
 
         if (!file.exists()) {
-            profile = new ProfileManagementActivity.Profile(null, null, null, 0);
+            profile = new ProfileManagementActivity.Profile(null, null, null, "");
             writeProfile(context);
             return;
         }
         try (InputStream stream = Files.newInputStream(file.toPath())) {
             JsonNode rootNode = new ObjectMapper().readTree(stream);
-            JsonNode pinCodeNode = rootNode.get("pinCode");
-            profile = new ProfileManagementActivity.Profile(
-                    rootNode.get("name").asText(null),
-                    rootNode.get("email").asText(null),
-                    rootNode.get("picture").asText(null),
-                    pinCodeNode == null ? 0 : rootNode.get("pinCode").asInt()
-            );
+            if (rootNode.isEmpty()) {
+                profile = new ProfileManagementActivity.Profile(null, null, null, "");
+            } else {
+                profile = new ProfileManagementActivity.Profile(
+                        rootNode.get("name").asText(null),
+                        rootNode.get("email").asText(null),
+                        rootNode.get("picture").asText(null),
+                        rootNode.get("pinCode").asText()
+                );
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

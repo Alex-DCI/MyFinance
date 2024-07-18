@@ -48,4 +48,11 @@
     <string name="enter_your_pin_code">Enter Your Pin Code</string>
     <string name="clear">Clear</string>
     <string name="backspace">backspace</string>
+    <string name="enterPin">Enter your Pin</string>
+    <string name="repeat">Repeat</string>
+    <string name="old_pin">Old Pin</string>
+    <string name="apply_new_pin">Apply new pin</string>
+    <string name="new_pin">New Pin</string>
+    <string name="pin">PIN</string>
+    <string name="pin_management">Pin Management</string>
 </resources>

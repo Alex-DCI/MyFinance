@@ -1,43 +1,59 @@
 package org.dci.myfinance;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
 public class ProfileManagementActivity extends AppCompatActivity {
     public static class Profile implements Serializable {
         private String name;
         private String email;
-        private String picture;
-        private int pinCode;
+        private String picturePath;
+        private String pinCode;
 
-        public Profile(String name, String email, String picture, int pinCode) {
+        public Profile(String name, String email, String picturePath, String pinCode) {
             this.name = name;
             this.email = email;
-            this.picture = picture;
+            this.picturePath = picturePath;
             this.pinCode = pinCode;
         }
-
-        public boolean checkPinCode(int pinCode) {
-            return this.pinCode == pinCode;
+        public String getPinCode() {
+            return pinCode;
+        }
+        public boolean checkPinCode(String pinCode) {
+            return this.pinCode.equals(pinCode);
         }
 
-        public void setPinCode(int pinCode) {
+        public void setPinCode(Context context, String pinCode) {
             this.pinCode = pinCode;
+            FilesOperations.getInstance(context).setProfile(context, this);
         }
 
         public String getName() {
@@ -56,12 +72,22 @@ public class ProfileManagementActivity extends AppCompatActivity {
             this.email = email;
         }
 
-        public String getPicture() {
-            return picture;
+        public String getPicturePath() {
+            return picturePath;
         }
 
-        public void setPicture(String picture) {
-            this.picture = picture;
+        public Bitmap getBitmap() {
+            try {
+                byte[] decodedByte = Base64.decode(picturePath, Base64.DEFAULT);
+                return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+            } catch (Exception e) {
+                e.getMessage();
+                return null;
+            }
+        }
+
+        public void setPicturePath(String picturePath) {
+            this.picturePath = picturePath;
         }
     }
 
@@ -71,6 +97,8 @@ public class ProfileManagementActivity extends AppCompatActivity {
     TextInputEditText emailEdit;
     Button applyButton;
     FilesOperations filesOperations;
+    ImageView[] pins;
+    EditText pinEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,16 +116,63 @@ public class ProfileManagementActivity extends AppCompatActivity {
         findViewById(R.id.backImage).setOnClickListener(v -> finish());
         findViewById(R.id.cancelButton).setOnClickListener(v -> finish());
         findViewById(R.id.editPictureIcon).setOnClickListener(v -> editPicture());
+        findViewById(R.id.editPinIcon).setOnClickListener(v -> {
+            Intent intent = new Intent(this, EditPinActivity.class);
+            intent.putExtra("profile", profile);
+            startActivity(intent);
+        });
+
+        pins = new ImageView[4];
+        pins[0] = findViewById(R.id.pin0);
+        pins[1] = findViewById(R.id.pin1);
+        pins[2] = findViewById(R.id.pin2);
+        pins[3] = findViewById(R.id.pin3);
 
         applyButton = findViewById(R.id.applyButton);
         TextView activityView = findViewById(R.id.activityView);
         nameEdit = findViewById(R.id.nameEdit);
         emailEdit = findViewById(R.id.emailEdit);
         profilePicture = findViewById(R.id.profilePicture);
+        pinEditText = findViewById(R.id.pinEditText);
+
+        if (profile.checkPinCode("")) {
+            findViewById(R.id.pins).setVisibility(View.INVISIBLE);
+        }
+
+        findViewById(R.id.pins).setOnClickListener(v -> {
+            pinEditText.setVisibility(View.VISIBLE);
+            pinEditText.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.showSoftInput(pinEditText, InputMethodManager.SHOW_IMPLICIT);
+        });
 
         activityView.setText(getResources().getString(R.string.profileManagement));
+        nameEdit.setText(profile.getName());
+        emailEdit.setText(profile.getEmail());
+        setPicture();
 
-        nameEdit.addTextChangedListener(new TextWatcher() {
+        applyButton.setOnClickListener(v -> validateInput());
+        addTextChangedListener(nameEdit);
+        addTextChangedListener(emailEdit);
+        addTextChangedListener(pinEditText);
+
+        pinEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setPins();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
+    private void addTextChangedListener(EditText inputField) {
+        inputField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -107,17 +182,22 @@ public class ProfileManagementActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                setApplyButtonAvailability();
-            }
+            public void afterTextChanged(Editable s) {}
         });
-
-        applyButton.setOnClickListener(v -> validateInput());
+    }
+    private void setApplyButtonAvailability() {
+        applyButton.setEnabled((pinEditText.getText().toString().length() == 4 || profile.checkPinCode(""))
+                &&isNameValid(String.valueOf(nameEdit.getText()))
+                && isEmailValid(String.valueOf(emailEdit.getText())));
     }
 
-    private void setApplyButtonAvailability() {
-        applyButton.setEnabled(isNameValid(String.valueOf(nameEdit.getText()))
-                && isEmailValid(String.valueOf(emailEdit.getText())));
+    private void setPicture() {
+        if (profile.picturePath != null) {
+            profilePicture.setImageBitmap(profile.getBitmap());
+        } else {
+            profilePicture.setImageDrawable(
+                    ContextCompat.getDrawable(this, R.drawable.default_profile_picture));
+        }
     }
 
     private void editPicture() {
@@ -134,6 +214,7 @@ public class ProfileManagementActivity extends AppCompatActivity {
     }
 
     private void openGallery() {
+
     }
 
     private void openCamera() {
@@ -143,11 +224,18 @@ public class ProfileManagementActivity extends AppCompatActivity {
     private void validateInput() {
         String name = String.valueOf(nameEdit.getText());
         String email = String.valueOf(emailEdit.getText());
+        String pin = String.valueOf(pinEditText.getText());
 
-        if (isEmailValid(email) && isNameValid(name)) {
+        if (!profile.checkPinCode(pin)) {
+            Toast.makeText(this, "The entered password is incorrect", Toast.LENGTH_SHORT).show();
+            pinEditText.setText("");
+            setPins();
+        } else if (isEmailValid(email) && isNameValid(name)) {
             profile.setName(String.valueOf(nameEdit.getText()));
             profile.setEmail(String.valueOf(emailEdit.getText()));
-//                    profilePicture.getDrawingCache());
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) profilePicture.getDrawable();
+            profile.setPicturePath(bitmapDrawable.getBitmap());
+            filesOperations.setProfile(this, profile);
             applyButton.setEnabled(false);
         } else {
             if (isNameValid(name)) {
@@ -169,5 +257,29 @@ public class ProfileManagementActivity extends AppCompatActivity {
 
     private boolean isEmailValid(String email) {
         return email.matches("[A-Za-z][\\w\\.-]{0,63}@[a-z]+\\.[a-z]{2}");
+    }
+
+    private void setPins() {
+        String input = pinEditText.getText().toString();
+        if (input.length() > 4) {
+            Toast.makeText(this, "Only 4-digit PIN is allowed.", Toast.LENGTH_SHORT).show();
+            pinEditText.setText(input.substring(0, 4));
+        }
+
+        for (int i = 0; i < 4; i++) {
+            if (i < input.length()) {
+                pins[i].setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.circle_filled));
+            } else {
+                pins[i].setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.circle));
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!profile.checkPinCode("")) {
+            findViewById(R.id.pins).setVisibility(View.VISIBLE);
+        }
     }
 }

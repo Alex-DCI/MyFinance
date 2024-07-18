@@ -14,12 +14,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import java.util.ArrayList;
-
 public class StartActivity extends AppCompatActivity {
     private Button enterButton;
-    private ArrayList<Integer> input;
-    private ImageView[] pinChars;
+    private String input = "";
+    private ImageView[] pins;
+    private ProfileManagementActivity.Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +30,13 @@ public class StartActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        ProfileManagementActivity.Profile profile = FilesOperations.getInstance(this).getProfile();
+
+        if (profile == null || profile.checkPinCode("")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
 
         Button[] numberButtons = new Button[10];
         numberButtons[0] = findViewById(R.id.button0);
@@ -47,13 +53,11 @@ public class StartActivity extends AppCompatActivity {
         enterButton = findViewById(R.id.enterButton);
         Button backspaceButton = findViewById(R.id.backSpaceButton);
 
-        pinChars = new ImageView[4];
-        pinChars[0] = findViewById(R.id.pinChar0);
-        pinChars[1] = findViewById(R.id.pinChar1);
-        pinChars[2] = findViewById(R.id.pinChar2);
-        pinChars[3] = findViewById(R.id.pinChar3);
-
-        input = new ArrayList<>(4);
+        pins = new ImageView[4];
+        pins[0] = findViewById(R.id.newPin0);
+        pins[1] = findViewById(R.id.newPin1);
+        pins[2] = findViewById(R.id.newPin2);
+        pins[3] = findViewById(R.id.newPin3);
 
         for (int i = 0; i < 10; i++) {
             int finalI = i;
@@ -62,38 +66,44 @@ public class StartActivity extends AppCompatActivity {
             });
         }
         clearButton.setOnClickListener(v -> {
-            input.clear();
-            setPinChars();
+            input = "";
+            setPins();
         });
         backspaceButton.setOnClickListener(v -> {
-            input.remove(input.size() - 1);
-            setPinChars();
+            input = input.substring(0, 4);
+            setPins();
         });
         enterButton.setOnClickListener(v -> {
-            //TODO implement after profile is complete
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+
+            if (profile.checkPinCode(input)) {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "The entered password is incorrect", Toast.LENGTH_SHORT).show();
+                input = "";
+                setPins();
+            }
         });
     }
 
     private void addNumber(int i) {
-        if (input.size() < 4) {
-            input.add(i);
+        if (input.length() < 4) {
+            input += i;
         } else {
             Toast.makeText(this, "Only 4-digit PIN is allowed.", Toast.LENGTH_SHORT).show();
         }
-        setPinChars();
+        setPins();
     }
 
-    private void setPinChars() {
+    private void setPins() {
         for (int i = 0; i < 4; i++) {
-            if (i < input.size()) {
-                pinChars[i].setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.circle_filled));
+            if (i < input.length()) {
+                pins[i].setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.circle_filled));
             } else {
-                pinChars[i].setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.circle));
+                pins[i].setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.circle));
             }
         }
-        if (input.size() == 4) {
+        if (input.length() == 4) {
             enterButton.setVisibility(View.VISIBLE);
         } else {
             enterButton.setVisibility(View.INVISIBLE);
