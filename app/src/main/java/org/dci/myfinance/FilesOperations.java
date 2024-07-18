@@ -27,9 +27,12 @@ public class FilesOperations {
 
     private FilesOperations(Context context) {
         readProfile(context);
+
         incomesCategories = new ArrayList<>();
         expensesCategories = new ArrayList<>();
         readCategories(context);
+
+        transactions = readTransactions(context);
     }
 
     public static synchronized FilesOperations getInstance(Context context) {
@@ -62,16 +65,18 @@ public class FilesOperations {
         return profile;
     }
 
-    public void setProfile(ProfileManagementActivity.Profile profile) {
+    public void setProfile(Context context, ProfileManagementActivity.Profile profile) {
         this.profile = profile;
+        writeProfile(context);
     }
 
     public List<Transaction> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(List<Transaction> transactions) {
+    public void setTransactions(Context context, List<Transaction> transactions) {
         this.transactions = transactions;
+        writeTransactions(context);
     }
 
     private List<Transaction> readTransactions(Context context) {
@@ -97,7 +102,7 @@ public class FilesOperations {
         return transactionsList;
     }
 
-    private void writeTransactions(Context context, List<Transaction> transactionsList) {
+    private void writeTransactions(Context context) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JSR310Module());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
@@ -107,7 +112,7 @@ public class FilesOperations {
         File file = new File(directory, "transaction.json");
 
         try (FileOutputStream fos = new FileOutputStream(file)) {
-            fos.write(mapper.writeValueAsBytes(transactionsList));
+            fos.write(mapper.writeValueAsBytes(transactions));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -119,7 +124,6 @@ public class FilesOperations {
         File file = new File(directory, "categories.json");
 
         if (!file.exists()) {
-            createCategoriesFile(context);
             incomesCategories = List.of("Salary", "Bonus", "Others");
             expensesCategories = List.of("Food", "Transport", "Entertainment", "House", "Children", "Others");
             writeCategories(context);
@@ -148,22 +152,6 @@ public class FilesOperations {
             JSONObject rootNode = new JSONObject();
             rootNode.put("incomesCategories", new JSONArray(incomesCategories));
             rootNode.put("expensesCategories", new JSONArray(expensesCategories));
-            writer.write(rootNode.toString());
-        } catch (IOException | JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void createCategoriesFile(Context context) {
-        ContextWrapper contextWrapper = new ContextWrapper(context);
-        File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
-        File file = new File(directory, "categories.json");
-
-        try (FileWriter writer = new FileWriter(file)) {
-            JSONObject rootNode = new JSONObject();
-            rootNode.put("incomesCategories", new JSONArray(List.of("Salary", "Bonus", "Others")));
-            rootNode.put("expensesCategories", new JSONArray(List.of("Food", "Transport", "Entertainment",
-                    "House", "Children", "Others")));
             writer.write(rootNode.toString());
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
