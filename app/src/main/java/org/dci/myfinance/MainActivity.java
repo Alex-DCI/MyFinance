@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAmountValue() {
-        List<Transaction> transactionsList = FilesOperations.getInstance().getTransactions(this);
+        List<Transaction> transactionsList = FilesOperations.getInstance(this).getTransactions();
         double amount = 0;
         for (Transaction transaction : transactionsList) {
             amount += transaction.isIncome() ? transaction.getAmount() : -transaction.getAmount();

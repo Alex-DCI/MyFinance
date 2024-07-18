@@ -39,13 +39,13 @@ public class CategoriesListAdapter extends RecyclerView.Adapter<CategoriesListAd
     public CategoriesListAdapter(CategoriesManagementActivity context, boolean isIncome) {
         this.context = context;
         this.isIncome = isIncome;
-        filesOperations = FilesOperations.getInstance();
-        categoriesList = filesOperations.getCategories(context, isIncome);
+        filesOperations = FilesOperations.getInstance(context);
+        categoriesList = filesOperations.getCategories(isIncome);
     }
 
     @Override
     public int getItemCount() {
-        return filesOperations.getCategories(context, isIncome).size();
+        return filesOperations.getCategories(isIncome).size();
     }
 
     @NonNull

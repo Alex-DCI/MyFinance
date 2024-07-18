@@ -25,6 +25,11 @@ import java.util.List;
 public class FilesOperations {
     private static FilesOperations instance;
 
+    private ProfileManagementActivity.Profile profile;
+    private List<Transaction> transactions;
+    private List<String> incomesCategories;
+    private List<String> expensesCategories;
+
     private FilesOperations(Context context) {
         readProfile(context);
 
@@ -41,12 +46,6 @@ public class FilesOperations {
         }
         return instance;
     }
-
-    private ProfileManagementActivity.Profile profile;
-    private List<Transaction> transactions;
-
-    private List<String> incomesCategories;
-    private List<String> expensesCategories;
 
     public List<String> getCategories(boolean isIncome) {
         return isIncome ? incomesCategories : expensesCategories;

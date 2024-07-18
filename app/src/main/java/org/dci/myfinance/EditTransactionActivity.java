@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,7 +56,7 @@ public class EditTransactionActivity extends AppCompatActivity {
         Bundle bundle = this.getIntent().getExtras();
         assert bundle != null;
         transaction = (Transaction) bundle.getSerializable("transaction");
-        filesOperations = FilesOperations.getInstance();
+        filesOperations = FilesOperations.getInstance(this);
 
         Button cancelButton = findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(v -> this.finish());
@@ -101,7 +100,7 @@ public class EditTransactionActivity extends AppCompatActivity {
 
     private void setSpinnerAdapter(boolean isIncome) {
 
-        List<String> categories = filesOperations.getCategories(this, isIncome);
+        List<String> categories = filesOperations.getCategories(isIncome);
         if (!categories.contains(transaction.getCategory())) {
             categories.add(transaction.getCategory());
         }
@@ -182,7 +181,7 @@ public class EditTransactionActivity extends AppCompatActivity {
             }
         }
 
-        List<Transaction> fullTransactionsList = filesOperations.getTransactions(this);
+        List<Transaction> fullTransactionsList = filesOperations.getTransactions();
         fullTransactionsList.remove(transaction);
 
         transaction.setAmount(amount);

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.Collections;
 import java.util.List;
 
 public class TransactionsHistoryActivity extends AppCompatActivity {
@@ -80,7 +79,7 @@ public class TransactionsHistoryActivity extends AppCompatActivity {
     }
 
     private List<Transaction> getCurrentList() {
-        transactionsList = FilesOperations.getInstance().getTransactions(this);
+        transactionsList = FilesOperations.getInstance(this).getTransactions();
         switch (tabLayout.getSelectedTabPosition()) {
             case 0: break;
             case 1: transactionsList.removeIf(Transaction::isIncome);

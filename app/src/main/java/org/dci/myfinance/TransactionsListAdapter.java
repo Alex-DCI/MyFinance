@@ -52,7 +52,7 @@ public class TransactionsListAdapter extends RecyclerView.Adapter<TransactionsLi
     public TransactionsListAdapter(TransactionsHistoryActivity context, List<Transaction> transactionsList) {
         this.context = context;
         this.transactionsList = transactionsList;
-        filesOperations = FilesOperations.getInstance();
+        filesOperations = FilesOperations.getInstance(context);
     }
 
     @Override

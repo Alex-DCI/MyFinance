@@ -49,7 +49,7 @@ public class AddTransaction extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        filesOperations = FilesOperations.getInstance();
+        filesOperations = FilesOperations.getInstance(this);
         Bundle bundle = getIntent().getExtras();
 
         assert bundle != null;
@@ -84,7 +84,7 @@ public class AddTransaction extends AppCompatActivity {
     }
 
     private void setSpinnerAdapter() {
-        List<String> categories = filesOperations.getCategories(this, isIncome);
+        List<String> categories = filesOperations.getCategories(isIncome);
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
                 this, R.layout.custom_spinner_item, categories);
         spinner.setAdapter(spinnerAdapter);
@@ -165,7 +165,7 @@ public class AddTransaction extends AppCompatActivity {
                 isIncome);
 
 
-        List<Transaction> fullTransactionsList = filesOperations.getTransactions(this);
+        List<Transaction> fullTransactionsList = filesOperations.getTransactions();
         fullTransactionsList.add(0, transaction);
         Collections.sort(fullTransactionsList);
 

@@ -45,9 +45,9 @@ public class CategoriesManagementActivity extends AppCompatActivity {
 
         backButton.setOnClickListener(v -> finish());
         context = this;
-        filesOperations = FilesOperations.getInstance();
+        filesOperations = FilesOperations.getInstance(this);
         isIncome = false;
-        currentCategoriesList = filesOperations.getCategories(this, false);
+        currentCategoriesList = filesOperations.getCategories(false);
 
         categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -57,7 +57,7 @@ public class CategoriesManagementActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 isIncome = tabLayout.getSelectedTabPosition() == 1;
-                currentCategoriesList = filesOperations.getCategories(context, isIncome);
+                currentCategoriesList = filesOperations.getCategories(isIncome);
                 if (isIncome) {
                     tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.green, null));
                 } else {
@@ -101,7 +101,7 @@ public class CategoriesManagementActivity extends AppCompatActivity {
     }
 
     public void setAdapter() {
-        currentCategoriesList = filesOperations.getCategories(this, isIncome);
+        currentCategoriesList = filesOperations.getCategories(isIncome);
         categoriesRecyclerView.setAdapter(new CategoriesListAdapter(this, isIncome));
     }
 }
