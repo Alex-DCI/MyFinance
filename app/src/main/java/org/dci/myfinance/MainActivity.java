@@ -87,8 +87,7 @@ public class MainActivity extends AppCompatActivity {
         for (Transaction transaction : transactionsList) {
             amount += transaction.isIncome() ? transaction.getAmount() : -transaction.getAmount();
         }
-        String amountString = getResources().getString(R.string.balance) +
-                Math.round(amount * 100.0) / 100.0 + getResources().getString(R.string.euro);
+        String amountString = Math.round(amount * 100.0) / 100.0 + getResources().getString(R.string.euro);
         amountTextView.setText(amountString);
     }
 }

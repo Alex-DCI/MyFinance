@@ -55,4 +55,7 @@
     <string name="new_pin">New Pin</string>
     <string name="pin">PIN</string>
     <string name="pin_management">Pin Management</string>
+    <string name="nameLengthError">Name must contain 3 to 15 letters</string>
+    <string name="nameValidationError">Name must only contain numbers and letters</string>
+    <string name="emailValidationError">Check your e-mail format</string>
 </resources>

@@ -1,10 +1,13 @@
 package org.dci.myfinance;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.Bitmap;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -80,9 +83,20 @@ public class FilesOperations {
         writeTransactions(context);
     }
 
+    public void setImage(Context context, Bitmap bitmap, ProfileManagementActivity.Profile profile) {
+        String file = "profile_image_" + System.currentTimeMillis() + ".jpg";
+        try (FileOutputStream fileOutputStream = context.openFileOutput(file, MODE_PRIVATE)){
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            profile.setPicturePath(file);
+            writeProfile(context);
+        } catch (Exception e) {
+            Toast.makeText(context, "Error saving image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void readTransactions(Context context) {
         ContextWrapper contextWrapper = new ContextWrapper(context);
-        File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
+        File directory = contextWrapper.getDir(context.getFilesDir().getName(), MODE_PRIVATE);
         File file = new File(directory, "transaction.json");
         transactions = new ArrayList<>();
         if (!file.exists()) {
@@ -110,7 +124,7 @@ public class FilesOperations {
         mapper.registerModule(new JSR310Module());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         ContextWrapper contextWrapper = new ContextWrapper(context);
-        File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
+        File directory = contextWrapper.getDir(context.getFilesDir().getName(), MODE_PRIVATE);
         File file = new File(directory, "transaction.json");
 
         try (FileOutputStream fos = new FileOutputStream(file)) {
@@ -122,7 +136,7 @@ public class FilesOperations {
 
     private void readCategories(Context context) {
         ContextWrapper contextWrapper = new ContextWrapper(context);
-        File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
+        File directory = contextWrapper.getDir(context.getFilesDir().getName(), MODE_PRIVATE);
         File file = new File(directory, "categories.json");
         if (!file.exists()) {
             incomesCategories = List.of("Salary", "Bonus", "Others");
@@ -148,7 +162,7 @@ public class FilesOperations {
 
     private void writeCategories(Context context) {
         ContextWrapper contextWrapper = new ContextWrapper(context);
-        File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
+        File directory = contextWrapper.getDir(context.getFilesDir().getName(), MODE_PRIVATE);
         File file = new File(directory, "categories.json");
 
         try (FileWriter writer = new FileWriter(file)) {
@@ -164,14 +178,8 @@ public class FilesOperations {
     private void writeProfile(Context context) {
         ObjectMapper mapper = new ObjectMapper();
         ContextWrapper contextWrapper = new ContextWrapper(context);
-        File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
+        File directory = contextWrapper.getDir(context.getFilesDir().getName(), MODE_PRIVATE);
         File file = new File(directory, "profile.json");
-
-        try {
-            Log.d("ProfileSerialization", "Profile data: " + mapper.writeValueAsString(profile));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
 
         try (FileOutputStream fos = new FileOutputStream(file)) {
             fos.write(mapper.writeValueAsBytes(profile));
@@ -182,7 +190,7 @@ public class FilesOperations {
 
     private void readProfile(Context context) {
         ContextWrapper contextWrapper = new ContextWrapper(context);
-        File directory = contextWrapper.getDir(context.getFilesDir().getName(), Context.MODE_PRIVATE);
+        File directory = contextWrapper.getDir(context.getFilesDir().getName(), MODE_PRIVATE);
         File file = new File(directory, "profile.json");
 
         if (!file.exists()) {
@@ -198,7 +206,7 @@ public class FilesOperations {
                 profile = new ProfileManagementActivity.Profile(
                         rootNode.get("name").asText(null),
                         rootNode.get("email").asText(null),
-                        rootNode.get("picture").asText(null),
+                        rootNode.get("picturePath").asText(),
                         rootNode.get("pinCode").asText()
                 );
             }

@@ -2,13 +2,15 @@ package org.dci.myfinance;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -18,9 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -28,8 +32,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.FileInputStream;
 
 public class ProfileManagementActivity extends AppCompatActivity {
     public static class Profile implements Serializable {
@@ -44,9 +50,11 @@ public class ProfileManagementActivity extends AppCompatActivity {
             this.picturePath = picturePath;
             this.pinCode = pinCode;
         }
+
         public String getPinCode() {
             return pinCode;
         }
+
         public boolean checkPinCode(String pinCode) {
             return this.pinCode.equals(pinCode);
         }
@@ -76,29 +84,20 @@ public class ProfileManagementActivity extends AppCompatActivity {
             return picturePath;
         }
 
-        public Bitmap getBitmap() {
-            try {
-                byte[] decodedByte = Base64.decode(picturePath, Base64.DEFAULT);
-                return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
-            } catch (Exception e) {
-                e.getMessage();
-                return null;
-            }
-        }
-
         public void setPicturePath(String picturePath) {
             this.picturePath = picturePath;
         }
     }
 
-    Profile profile;
-    ImageView profilePicture;
-    TextInputEditText nameEdit;
-    TextInputEditText emailEdit;
-    Button applyButton;
-    FilesOperations filesOperations;
-    ImageView[] pins;
-    EditText pinEditText;
+    private Profile profile;
+    private ImageView profilePicture;
+    private TextInputEditText nameEdit;
+    private TextInputEditText emailEdit;
+    private Button applyButton;
+    private FilesOperations filesOperations;
+    private ImageView[] pins;
+    private EditText pinEditText;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +109,7 @@ public class ProfileManagementActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         filesOperations = FilesOperations.getInstance(this);
         profile = filesOperations.getProfile();
 
@@ -146,6 +146,13 @@ public class ProfileManagementActivity extends AppCompatActivity {
             imm.showSoftInput(pinEditText, InputMethodManager.SHOW_IMPLICIT);
         });
 
+        pinEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                setOnFocusChangeListener(hasFocus);
+            }
+        });
+
         activityView.setText(getResources().getString(R.string.profileManagement));
         nameEdit.setText(profile.getName());
         emailEdit.setText(profile.getEmail());
@@ -155,20 +162,14 @@ public class ProfileManagementActivity extends AppCompatActivity {
         addTextChangedListener(nameEdit);
         addTextChangedListener(emailEdit);
         addTextChangedListener(pinEditText);
+    }
 
-        pinEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                setPins();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
+    private void setOnFocusChangeListener(boolean hasFocus) {
+        if (hasFocus) {
+            pinEditText.setBackground(AppCompatResources.getDrawable(this, R.drawable.edit_text_style));
+        } else {
+            pinEditText.setBackground(AppCompatResources.getDrawable(this, R.drawable.edit_text_default));
+        }
     }
 
     private void addTextChangedListener(EditText inputField) {
@@ -178,22 +179,37 @@ public class ProfileManagementActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (inputField == pinEditText) {
+                    setPins();
+                }
                 setApplyButtonAvailability();
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
+
     private void setApplyButtonAvailability() {
         applyButton.setEnabled((pinEditText.getText().toString().length() == 4 || profile.checkPinCode(""))
-                &&isNameValid(String.valueOf(nameEdit.getText()))
+                && isNameValid(String.valueOf(nameEdit.getText()))
                 && isEmailValid(String.valueOf(emailEdit.getText())));
     }
 
     private void setPicture() {
-        if (profile.picturePath != null) {
-            profilePicture.setImageBitmap(profile.getBitmap());
+        if (profile.getPicturePath() != null) {
+            try (FileInputStream fis = openFileInput(profile.getPicturePath())){
+                profilePicture.setImageBitmap(BitmapFactory.decodeStream(fis));
+                System.out.println();
+            } catch (FileNotFoundException e) {
+                Toast.makeText(this, "File not found. Default image is used instead", Toast.LENGTH_SHORT).show();
+                profile.setPicturePath(null);
+                setPicture();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Log.d("pictureTest", profilePicture.getDrawable().toString());
         } else {
             profilePicture.setImageDrawable(
                     ContextCompat.getDrawable(this, R.drawable.default_profile_picture));
@@ -206,7 +222,7 @@ public class ProfileManagementActivity extends AppCompatActivity {
                 .setTitle(R.string.chooseAnImageSource)
                 .setItems(imageSource, (dialog, which) -> {
                     if (which == 0) {
-                        openCamera();
+                        checkCamera();
                     } else {
                         openGallery();
                     }
@@ -214,10 +230,18 @@ public class ProfileManagementActivity extends AppCompatActivity {
     }
 
     private void openGallery() {
-
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, 1);
     }
 
-    private void openCamera() {
+    private void checkCamera() {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.CAMERA}, 3);
+        } else {
+            startCamera();
+        }
 
     }
 
@@ -227,47 +251,44 @@ public class ProfileManagementActivity extends AppCompatActivity {
         String pin = String.valueOf(pinEditText.getText());
 
         if (!profile.checkPinCode(pin)) {
-            Toast.makeText(this, "The entered password is incorrect", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The entered Pin is incorrect", Toast.LENGTH_SHORT).show();
             pinEditText.setText("");
             setPins();
         } else if (isEmailValid(email) && isNameValid(name)) {
-            profile.setName(String.valueOf(nameEdit.getText()));
-            profile.setEmail(String.valueOf(emailEdit.getText()));
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) profilePicture.getDrawable();
-            profile.setPicturePath(bitmapDrawable.getBitmap());
+            profile.setName(name);
+            profile.setEmail(email);
             filesOperations.setProfile(this, profile);
+            Toast.makeText(this, "Profile saved", Toast.LENGTH_SHORT).show();
             applyButton.setEnabled(false);
         } else {
             if (isNameValid(name)) {
                 if (name.length() < 3 || name.length() > 15) {
-                    nameEdit.setError(getResources().getString(R.string.lettersAmountError));
-                } else {
-                    nameEdit.setError(getResources().getString(R.string.charsSetError));
+                    nameEdit.setError(getResources().getString(R.string.nameLengthError));
+                } else if (!name.matches("[a-zA-Z0-9]+")) {
+                    nameEdit.setError(getResources().getString(R.string.nameValidationError));
                 }
             }
+
             if (!isEmailValid(email)) {
-                emailEdit.setError(getResources().getString(R.string.emailIsInvalid));
+                emailEdit.setError(getResources().getString(R.string.emailValidationError));
             }
         }
-    }
-
-    private boolean isNameValid(String name) {
-        return name.matches("\\w{3,15}");
     }
 
     private boolean isEmailValid(String email) {
-        return email.matches("[A-Za-z][\\w\\.-]{0,63}@[a-z]+\\.[a-z]{2}");
+        return email.matches(".+@.+\\.[a-z]+");
+    }
+
+    private boolean isNameValid(String name) {
+        return !name.equals(profile.getName())
+                && name.length() >= 3 && name.length() <= 15
+                && name.matches("[a-zA-Z0-9]+");
     }
 
     private void setPins() {
-        String input = pinEditText.getText().toString();
-        if (input.length() > 4) {
-            Toast.makeText(this, "Only 4-digit PIN is allowed.", Toast.LENGTH_SHORT).show();
-            pinEditText.setText(input.substring(0, 4));
-        }
-
-        for (int i = 0; i < 4; i++) {
-            if (i < input.length()) {
+        int enteredPinLength = pinEditText.getText().toString().length();
+        for (int i = 0; i < pins.length; i++) {
+            if (i < enteredPinLength) {
                 pins[i].setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.circle_filled));
             } else {
                 pins[i].setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.circle));
@@ -276,10 +297,50 @@ public class ProfileManagementActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (!profile.checkPinCode("")) {
-            findViewById(R.id.pins).setVisibility(View.VISIBLE);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1 && data != null) {
+                Bundle extras = data.getExtras();
+                if (extras != null) {
+                    bitmap = (Bitmap) extras.get("data");
+                }
+                profilePicture.setImageBitmap(bitmap);
+                filesOperations.setImage(this, bitmap, profile);
+                setApplyButtonAvailability();
+            } else if (requestCode == 2 && data != null) {
+                Uri selectedImage = data.getData();
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                    profilePicture.setImageBitmap(bitmap);
+                    filesOperations.setImage(this, bitmap, profile);
+                    setApplyButtonAvailability();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 3) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startCamera();
+            } else {
+                Toast.makeText(this, "Camera permission is required to use the camera", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void startCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, 1);
+        } else {
+            Toast.makeText(this, "No camera app found", Toast.LENGTH_SHORT).show();
         }
     }
 }
