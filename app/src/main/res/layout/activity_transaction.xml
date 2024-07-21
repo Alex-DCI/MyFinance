@@ -158,7 +158,7 @@
             app:layout_constraintBottom_toTopOf="@+id/descriptionEditText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="0.3"
-            app:layout_constraintStart_toEndOf="@+id/categoryTextView"
+            app:layout_constraintStart_toEndOf="@+id/infoTextView"
             app:layout_constraintTop_toBottomOf="@+id/timeLayout" />
 
         <EditText
@@ -177,7 +177,7 @@
             tools:ignore="Autofill" />
 
         <TextView
-            android:id="@+id/categoryTextView"
+            android:id="@+id/infoTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/category"

@@ -58,4 +58,11 @@
     <string name="nameLengthError">Name must contain 3 to 15 letters</string>
     <string name="nameValidationError">Name must only contain numbers and letters</string>
     <string name="emailValidationError">Check your e-mail format</string>
+    <string name="help">Help and Support</string>
+    <string name="emailSupport"><u>E-mail: best.support@ever.com</u></string>
+    <string name="phoneSupport"><u>Phone: +49(090)939-99-97</u></string>
+    <string name="question">Question</string>
+    <string name="answer">Answer</string>
+    <string name="contact_information">Contact Information</string>
+    <string name="feedback">Feedback</string>
 </resources>

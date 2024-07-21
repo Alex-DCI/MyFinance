@@ -43,13 +43,11 @@ public class MainActivity extends AppCompatActivity {
         setAmountValue();
 
         categoriesManagemenButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, CategoriesManagementActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, CategoriesManagementActivity.class));
         });
 
         transactionsHistoryButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, TransactionsHistoryActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, TransactionsHistoryActivity.class));
         });
 
         addExpenseImage.setOnClickListener(v -> {
@@ -65,10 +63,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         profilesManagementButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ProfileManagementActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, ProfileManagementActivity.class));
         });
 
+        supportButton.setOnClickListener(v -> {
+            startActivity(new Intent(this, SupportActivity.class));
+        });
     }
 
     @Override

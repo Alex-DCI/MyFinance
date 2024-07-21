@@ -18,17 +18,17 @@ import java.util.List;
 public class TransactionsListAdapter extends RecyclerView.Adapter<TransactionsListAdapter.TransactionsListViewHolder> {
 
     public static class TransactionsListViewHolder extends RecyclerView.ViewHolder {
-        TextView amountTextView;
-        TextView categoryTextView;
-        TextView dateTextView;
-        ImageView deleteTransactionImage;
-        ImageView editTransactionImage;
+        private TextView amountTextView;
+        private TextView infoTextView;
+        private TextView dateTextView;
+        private ImageView deleteTransactionImage;
+        private ImageView editTransactionImage;
 
         public TransactionsListViewHolder(@NonNull View itemView) {
             super(itemView);
 
             amountTextView = itemView.findViewById(R.id.amountTextView);
-            categoryTextView = itemView.findViewById(R.id.categoryTextView);
+            infoTextView = itemView.findViewById(R.id.infoTextView);
             dateTextView = itemView.findViewById(R.id.dateTextView);
             deleteTransactionImage = itemView.findViewById(R.id.deleteTransactionImage);
             editTransactionImage = itemView.findViewById(R.id.editTransactionImage);
@@ -58,11 +58,15 @@ public class TransactionsListAdapter extends RecyclerView.Adapter<TransactionsLi
     @Override
     public void onBindViewHolder(@NonNull TransactionsListViewHolder holder, int position) {
         Transaction currentTransaction = transactionsList.get(position);
-        holder.categoryTextView.setText(currentTransaction.getCategory());
-        holder.categoryTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        holder.categoryTextView.setSingleLine(true);
-        holder.categoryTextView.setMarqueeRepeatLimit(10);
-        holder.categoryTextView.setSelected(true);
+        holder.infoTextView.setText(currentTransaction.getCategory());
+        holder.infoTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        holder.infoTextView.setSingleLine(true);
+        holder.infoTextView.setMarqueeRepeatLimit(10);
+        holder.infoTextView.setSelected(true);
+
+        setListener(holder.infoTextView, holder.infoTextView, position);
+        setListener(holder.amountTextView, holder.infoTextView, position);
+        setListener(holder.dateTextView, holder.infoTextView, position);
 
         double transactionAmount = currentTransaction.getAmount();
         String amountString = transactionAmount + context.getResources().getString(R.string.euro);
@@ -70,10 +74,10 @@ public class TransactionsListAdapter extends RecyclerView.Adapter<TransactionsLi
         holder.amountTextView.setTextColor(context.getResources().getColor(
                 currentTransaction.isIncome() ? R.color.green : R.color.red
         ));
-        holder.categoryTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        holder.categoryTextView.setSingleLine(true);
-        holder.categoryTextView.setMarqueeRepeatLimit(10);
-        holder.categoryTextView.setSelected(true);
+        holder.infoTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        holder.infoTextView.setSingleLine(true);
+        holder.infoTextView.setMarqueeRepeatLimit(10);
+        holder.infoTextView.setSelected(true);
 
         DateTimeFormatter to = DateTimeFormatter.ofPattern("dd MMM yyy");
         String date = currentTransaction.getDateTime().format(to);
@@ -102,5 +106,14 @@ public class TransactionsListAdapter extends RecyclerView.Adapter<TransactionsLi
         return transactionsList.size();
     }
 
-
+    private void setListener(TextView view, TextView infoView, int position) {
+        view.setOnClickListener(v -> {
+            if (!transactionsList.get(position).getDescription().isEmpty()
+                    && infoView.getText().toString().equals(transactionsList.get(position).getCategory())) {
+                infoView.setText(transactionsList.get(position).getDescription());
+            } else {
+                infoView.setText(transactionsList.get(position).getCategory());
+            }
+        });
+    }
 }

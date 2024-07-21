@@ -54,7 +54,7 @@
         app:srcCompat="@drawable/edit" />
 
     <TextView
-        android:id="@+id/categoryTextView"
+        android:id="@+id/infoTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/category"
