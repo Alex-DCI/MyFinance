@@ -3,7 +3,7 @@
     <string name="addIncome">Add Income</string>
     <string name="addExpense">Add Expense</string>
     <string name="categoriesManagement">Categories Management</string>
-    <string name="profiles">Profiles</string>
+    <string name="profile">Profile</string>
     <string name="support">Support</string>
     <string name="transactionsHistory">Transactions History</string>
     <string name="currentBalance">Your current balance is:</string>

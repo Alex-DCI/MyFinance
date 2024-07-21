@@ -75,6 +75,7 @@ public class StartActivity extends AppCompatActivity {
         });
         enterButton.setOnClickListener(v -> {
 
+            assert profile != null;
             if (profile.checkPinCode(input)) {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);

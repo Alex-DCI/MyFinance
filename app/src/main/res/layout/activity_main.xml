@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/greetingsText"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="25dp"
         android:layout_marginTop="25dp"
         android:textAlignment="center"
@@ -113,7 +113,7 @@
             android:id="@+id/profileManagementButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/profiles"
+            android:text="@string/profile"
             android:textAlignment="center"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"

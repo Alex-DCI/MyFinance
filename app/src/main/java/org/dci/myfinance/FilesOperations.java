@@ -5,8 +5,11 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,10 +21,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,12 +36,15 @@ import java.util.List;
 public class FilesOperations {
     private static FilesOperations instance;
 
+    private final File directory;
     private ProfileManagementActivity.Profile profile;
     private List<Transaction> transactions;
     private List<String> incomesCategories;
     private List<String> expensesCategories;
+    private Bitmap image;
 
     private FilesOperations(Context context) {
+        directory = new ContextWrapper(context).getDir(context.getFilesDir().getName(), MODE_PRIVATE);
         readProfile(context);
 
         incomesCategories = new ArrayList<>();
@@ -83,20 +92,26 @@ public class FilesOperations {
         writeTransactions(context);
     }
 
-    public void setImage(Context context, Bitmap bitmap, ProfileManagementActivity.Profile profile) {
-        String file = "profile_image_" + System.currentTimeMillis() + ".jpg";
-        try (FileOutputStream fileOutputStream = context.openFileOutput(file, MODE_PRIVATE)){
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-            profile.setPicturePath(file);
-            writeProfile(context);
-        } catch (Exception e) {
-            Toast.makeText(context, "Error saving image", Toast.LENGTH_SHORT).show();
+    public void setImage(Context context, Bitmap bitmap) {
+        image = bitmap;
+        File file = new File(directory, "profile_image.jpg");
+        try (OutputStream stream = Files.newOutputStream(file.toPath())){
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        } catch (IOException e) {
+            Toast.makeText(context, "Unable to save file", Toast.LENGTH_SHORT).show();
         }
     }
 
+    public Bitmap getImage(Context context) {
+        try (FileInputStream fileInputStream = new FileInputStream(new File(directory, "/profile_image.jpg"))){
+            image = BitmapFactory.decodeStream(fileInputStream);
+        } catch (IOException e) {
+            image = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_profile_picture);
+        }
+        return image;
+    }
+
     private void readTransactions(Context context) {
-        ContextWrapper contextWrapper = new ContextWrapper(context);
-        File directory = contextWrapper.getDir(context.getFilesDir().getName(), MODE_PRIVATE);
         File file = new File(directory, "transaction.json");
         transactions = new ArrayList<>();
         if (!file.exists()) {
@@ -135,8 +150,6 @@ public class FilesOperations {
     }
 
     private void readCategories(Context context) {
-        ContextWrapper contextWrapper = new ContextWrapper(context);
-        File directory = contextWrapper.getDir(context.getFilesDir().getName(), MODE_PRIVATE);
         File file = new File(directory, "categories.json");
         if (!file.exists()) {
             incomesCategories = List.of("Salary", "Bonus", "Others");
@@ -161,10 +174,7 @@ public class FilesOperations {
     }
 
     private void writeCategories(Context context) {
-        ContextWrapper contextWrapper = new ContextWrapper(context);
-        File directory = contextWrapper.getDir(context.getFilesDir().getName(), MODE_PRIVATE);
         File file = new File(directory, "categories.json");
-
         try (FileWriter writer = new FileWriter(file)) {
             JSONObject rootNode = new JSONObject();
             rootNode.put("incomesCategories", new JSONArray(incomesCategories));
@@ -177,10 +187,7 @@ public class FilesOperations {
 
     private void writeProfile(Context context) {
         ObjectMapper mapper = new ObjectMapper();
-        ContextWrapper contextWrapper = new ContextWrapper(context);
-        File directory = contextWrapper.getDir(context.getFilesDir().getName(), MODE_PRIVATE);
         File file = new File(directory, "profile.json");
-
         try (FileOutputStream fos = new FileOutputStream(file)) {
             fos.write(mapper.writeValueAsBytes(profile));
         } catch (IOException e) {
@@ -189,25 +196,21 @@ public class FilesOperations {
     }
 
     private void readProfile(Context context) {
-        ContextWrapper contextWrapper = new ContextWrapper(context);
-        File directory = contextWrapper.getDir(context.getFilesDir().getName(), MODE_PRIVATE);
         File file = new File(directory, "profile.json");
-
         if (!file.exists()) {
-            profile = new ProfileManagementActivity.Profile(null, null, null, "");
+            profile = new ProfileManagementActivity.Profile(null, null, "");
             writeProfile(context);
             return;
         }
         try (InputStream stream = Files.newInputStream(file.toPath())) {
             JsonNode rootNode = new ObjectMapper().readTree(stream);
             if (rootNode.isEmpty()) {
-                profile = new ProfileManagementActivity.Profile(null, null, null, "");
+                profile = new ProfileManagementActivity.Profile(null, null, "");
             } else {
                 profile = new ProfileManagementActivity.Profile(
                         rootNode.get("name").asText(null),
                         rootNode.get("email").asText(null),
-                        rootNode.get("picturePath").asText(),
-                        rootNode.get("pinCode").asText()
+                        rootNode.get("pinCode").asText("")
                 );
             }
         } catch (IOException e) {

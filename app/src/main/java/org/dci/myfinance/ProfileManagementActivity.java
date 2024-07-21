@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -32,22 +31,18 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.FileInputStream;
 
 public class ProfileManagementActivity extends AppCompatActivity {
     public static class Profile implements Serializable {
         private String name;
         private String email;
-        private String picturePath;
         private String pinCode;
 
-        public Profile(String name, String email, String picturePath, String pinCode) {
+        public Profile(String name, String email, String pinCode) {
             this.name = name;
             this.email = email;
-            this.picturePath = picturePath;
             this.pinCode = pinCode;
         }
 
@@ -78,14 +73,6 @@ public class ProfileManagementActivity extends AppCompatActivity {
 
         public void setEmail(String email) {
             this.email = email;
-        }
-
-        public String getPicturePath() {
-            return picturePath;
-        }
-
-        public void setPicturePath(String picturePath) {
-            this.picturePath = picturePath;
         }
     }
 
@@ -119,7 +106,7 @@ public class ProfileManagementActivity extends AppCompatActivity {
         findViewById(R.id.editPinIcon).setOnClickListener(v -> {
             Intent intent = new Intent(this, EditPinActivity.class);
             intent.putExtra("profile", profile);
-            startActivity(intent);
+            startActivityForResult(intent, 100);
         });
 
         pins = new ImageView[4];
@@ -140,28 +127,27 @@ public class ProfileManagementActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.pins).setOnClickListener(v -> {
-            pinEditText.setVisibility(View.VISIBLE);
-            pinEditText.requestFocus();
-            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            imm.showSoftInput(pinEditText, InputMethodManager.SHOW_IMPLICIT);
+            setEditTextVisibility();
         });
 
-        pinEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                setOnFocusChangeListener(hasFocus);
-            }
-        });
+        pinEditText.setOnFocusChangeListener((v, hasFocus) -> setOnFocusChangeListener(hasFocus));
 
         activityView.setText(getResources().getString(R.string.profileManagement));
         nameEdit.setText(profile.getName());
         emailEdit.setText(profile.getEmail());
-        setPicture();
+        profilePicture.setImageBitmap(filesOperations.getImage(this));
 
         applyButton.setOnClickListener(v -> validateInput());
         addTextChangedListener(nameEdit);
         addTextChangedListener(emailEdit);
         addTextChangedListener(pinEditText);
+    }
+
+    private void setEditTextVisibility() {
+        pinEditText.setVisibility(View.VISIBLE);
+        pinEditText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInput(pinEditText, InputMethodManager.SHOW_IMPLICIT);
     }
 
     private void setOnFocusChangeListener(boolean hasFocus) {
@@ -195,25 +181,6 @@ public class ProfileManagementActivity extends AppCompatActivity {
         applyButton.setEnabled((pinEditText.getText().toString().length() == 4 || profile.checkPinCode(""))
                 && isNameValid(String.valueOf(nameEdit.getText()))
                 && isEmailValid(String.valueOf(emailEdit.getText())));
-    }
-
-    private void setPicture() {
-        if (profile.getPicturePath() != null) {
-            try (FileInputStream fis = openFileInput(profile.getPicturePath())){
-                profilePicture.setImageBitmap(BitmapFactory.decodeStream(fis));
-                System.out.println();
-            } catch (FileNotFoundException e) {
-                Toast.makeText(this, "File not found. Default image is used instead", Toast.LENGTH_SHORT).show();
-                profile.setPicturePath(null);
-                setPicture();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Log.d("pictureTest", profilePicture.getDrawable().toString());
-        } else {
-            profilePicture.setImageDrawable(
-                    ContextCompat.getDrawable(this, R.drawable.default_profile_picture));
-        }
     }
 
     private void editPicture() {
@@ -280,8 +247,7 @@ public class ProfileManagementActivity extends AppCompatActivity {
     }
 
     private boolean isNameValid(String name) {
-        return !name.equals(profile.getName())
-                && name.length() >= 3 && name.length() <= 15
+        return name.length() >= 3 && name.length() <= 15
                 && name.matches("[a-zA-Z0-9]+");
     }
 
@@ -306,18 +272,25 @@ public class ProfileManagementActivity extends AppCompatActivity {
                     bitmap = (Bitmap) extras.get("data");
                 }
                 profilePicture.setImageBitmap(bitmap);
-                filesOperations.setImage(this, bitmap, profile);
+                filesOperations.setImage(this, bitmap);
                 setApplyButtonAvailability();
             } else if (requestCode == 2 && data != null) {
                 Uri selectedImage = data.getData();
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                     profilePicture.setImageBitmap(bitmap);
-                    filesOperations.setImage(this, bitmap, profile);
+                    filesOperations.setImage(this, bitmap);
                     setApplyButtonAvailability();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } if (requestCode == 100) {
+                String pinString = data.getStringExtra("pinString");
+                assert pinString != null;
+                findViewById(R.id.pins).setVisibility(pinString.isEmpty() ? View.INVISIBLE : View.VISIBLE);
+                profile.setPinCode(this, pinString);
+                setApplyButtonAvailability();
+                setPins();
             }
         }
     }

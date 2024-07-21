@@ -1,5 +1,7 @@
 package org.dci.myfinance;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -66,8 +68,14 @@ public class EditPinActivity extends AppCompatActivity {
         setTextChangedListener();
         setOnFocusChangeListener();
 
-        findViewById(R.id.backImage).setOnClickListener(v -> finish());
-        findViewById(R.id.cancelButton).setOnClickListener(v -> finish());
+        findViewById(R.id.backImage).setOnClickListener(v -> {
+            setResult(Activity.RESULT_CANCELED, new Intent());
+            finish();
+        });
+        findViewById(R.id.cancelButton).setOnClickListener(v -> {
+            setResult(Activity.RESULT_CANCELED, new Intent());
+            finish();
+        });
         findViewById(R.id.applyButton).setOnClickListener(v -> validateInput());
     }
 
@@ -167,8 +175,9 @@ public class EditPinActivity extends AppCompatActivity {
             Toast.makeText(this, "Enter a 4-digit PIN or leave the field blank to disable it", Toast.LENGTH_LONG).show();
             return;
         }
-
-        profile.setPinCode(this, newPin);
+        Intent intent = new Intent();
+        intent.putExtra("pinString", newPin);
+        setResult(Activity.RESULT_OK, intent);
         finish();
     }
 }

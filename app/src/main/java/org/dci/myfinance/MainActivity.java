@@ -12,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -78,7 +79,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setGreeting() {
-
+        int hour = LocalTime.now().getHour();
+        String greeting;
+        if (hour > 21 || hour < 6) {
+            greeting = "Good night";
+        } else if (hour < 12) {
+            greeting = "Good morning";
+        } else if (hour < 18) {
+            greeting = "Good afternoon";
+        } else {
+            greeting = "Good evening";
+        }
+        String name = FilesOperations.getInstance(this).getProfile().getName();
+        if (name != null) {
+            greeting = greeting + ", " + name;
+        }
+        greeting += '!';
+        greetingsText.setText(greeting);
     }
 
     private void setAmountValue() {
