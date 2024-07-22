@@ -32,16 +32,16 @@
         android:theme="@style/Theme.MyFinance"
         tools:targetApi="31">
         <activity
-            android:name=".Feedback"
+            android:name=".Activities.Feedback"
             android:exported="false" />
         <activity
-            android:name=".SupportActivity"
+            android:name=".Activities.SupportActivity"
             android:exported="false" />
         <activity
-            android:name=".EditPinActivity"
+            android:name=".Activities.EditPinActivity"
             android:exported="false" />
         <activity
-            android:name=".StartActivity"
+            android:name=".Activities.StartActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,24 +50,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ProfileManagementActivity"
+            android:name=".Activities.ProfileManagementActivity"
             android:exported="false"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".AddTransaction"
+            android:name=".Activities.AddTransaction"
             android:exported="false" />
         <activity
-            android:name=".EditTransactionActivity"
+            android:name=".Activities.EditTransactionActivity"
             android:exported="false" />
         <activity
-            android:name=".TransactionsHistoryActivity"
+            android:name=".Activities.TransactionsHistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".CategoriesManagementActivity"
+            android:name=".Activities.CategoriesManagementActivity"
             android:exported="false"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:exported="true" />
 
         <provider

@@ -1,4 +1,4 @@
-package org.dci.myfinance;
+package org.dci.myfinance.Activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -17,6 +17,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.dci.myfinance.Adapters.FAQAdapter;
+import org.dci.myfinance.R;
 
 import java.util.ArrayList;
 import java.util.List;

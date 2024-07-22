@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Feedback">
+    tools:context=".Activities.Feedback">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topPanel"
@@ -58,12 +58,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="50dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/issueDescription">
+
+                <Button
+                    android:id="@+id/cancelButton"
+                    android:layout_width="125dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/applyButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/applyButton"
+                    android:layout_width="125dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apply"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/cancelButton"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <Spinner
                 android:id="@+id/reasonSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_margin="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.8"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
@@ -117,16 +151,14 @@
                         android:layout_height="48dp"
                         android:layout_marginBottom="5dp"
                         android:ems="10"
-                        android:inputType="text"
-                        android:text="@string/name" />
+                        android:inputType="text" />
 
                     <EditText
                         android:id="@+id/emailEditText"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="5dp"
-                        android:inputType="textEmailAddress"
-                        android:text="@string/email" />
+                        android:inputType="textEmailAddress" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -135,17 +167,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
-                android:layout_marginBottom="1dp"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:counterEnabled="true"
+                app:counterMaxLength="1000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/reasonSpinner">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/feedback"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:gravity="start" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/spinnerError"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/error"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/issueDescription"
+                app:layout_constraintEnd_toStartOf="@+id/reasonSpinner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

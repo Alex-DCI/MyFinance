@@ -1,4 +1,4 @@
-package org.dci.myfinance;
+package org.dci.myfinance.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.tabs.TabLayout;
+
+import org.dci.myfinance.Adapters.TransactionsListAdapter;
+import org.dci.myfinance.FilesOperations;
+import org.dci.myfinance.R;
+import org.dci.myfinance.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.dci.myfinance;
+package org.dci.myfinance.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import org.dci.myfinance.R;
 
 import java.util.ArrayList;
 import java.util.List;

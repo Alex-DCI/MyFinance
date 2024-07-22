@@ -1,4 +1,4 @@
-package org.dci.myfinance;
+package org.dci.myfinance.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -30,6 +29,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
+
+import org.dci.myfinance.FilesOperations;
+import org.dci.myfinance.R;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -243,7 +245,7 @@ public class ProfileManagementActivity extends AppCompatActivity {
     }
 
     private boolean isEmailValid(String email) {
-        return email.matches(".+@.+\\.[a-z]+");
+        return email.matches("^[a-zA-Z0-9].[a-zA-Z0-9\\._%\\+\\-]{0,63}@[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,30}$");
     }
 
     private boolean isNameValid(String name) {

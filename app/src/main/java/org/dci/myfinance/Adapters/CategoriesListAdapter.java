@@ -1,4 +1,4 @@
-package org.dci.myfinance;
+package org.dci.myfinance.Adapters;
 
 import android.app.AlertDialog;
 import android.text.TextUtils;
@@ -11,6 +11,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.dci.myfinance.Activities.CategoriesManagementActivity;
+import org.dci.myfinance.FilesOperations;
+import org.dci.myfinance.R;
 
 import java.util.List;
 
