@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -38,6 +37,9 @@ public class SupportActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.backImage).setOnClickListener(v -> finish());
+        findViewById(R.id.feedback).setOnClickListener(v -> {
+            startActivity(new Intent(this, Feedback.class));
+        });
 
         findViewById(R.id.phoneTextView).setOnClickListener(v -> {
             String phone = "+490909399997";
@@ -116,6 +118,34 @@ public class SupportActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Call permission is required to use the phone call", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    public static class FAQ {
+        private final String question;
+        private final String answer;
+        private boolean isAnswerVisible;
+
+        public FAQ(String question, String answer) {
+            this.question = question;
+            this.answer = answer;
+            isAnswerVisible = false;
+        }
+
+        public String getQuestion() {
+            return question;
+        }
+
+        public String getAnswer() {
+            return answer;
+        }
+
+        public boolean isAnswerVisible() {
+            return isAnswerVisible;
+        }
+
+        public void setAnswerVisible(boolean answerVisible) {
+            isAnswerVisible = answerVisible;
         }
     }
 }

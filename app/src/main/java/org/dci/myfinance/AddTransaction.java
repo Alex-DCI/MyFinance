@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -32,15 +31,15 @@ import java.util.List;
 
 
 public class AddTransaction extends AppCompatActivity {
-    boolean isIncome;
-    DateTimeFormatter dateFormatter;
-    DateTimeFormatter timeFormatter;
-    TextInputEditText dateEditText;
-    TextInputEditText timeEditText;
-    Spinner spinner;
-    FilesOperations filesOperations;
-    EditText amountTextView;
-    EditText descriptionEditText;
+    private boolean isIncome;
+    private DateTimeFormatter dateFormatter;
+    private DateTimeFormatter timeFormatter;
+    private TextInputEditText dateEditText;
+    private TextInputEditText timeEditText;
+    private Spinner spinner;
+    private FilesOperations filesOperations;
+    private EditText amountTextView;
+    private EditText descriptionEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -16,10 +16,10 @@ import java.util.List;
 
 public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FAQViewHolder> {
 
-    private List<FAQ> faqList;
+    private List<SupportActivity.FAQ> faqList;
     private Context context;
 
-    public FAQAdapter(List<FAQ> faqList, Context context) {
+    public FAQAdapter(List<SupportActivity.FAQ> faqList, Context context) {
         this.faqList = faqList;
         this.context = context;
     }
@@ -33,7 +33,7 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FAQViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull FAQViewHolder holder, int position) {
-        FAQ faq = faqList.get(position);
+        SupportActivity.FAQ faq = faqList.get(position);
         holder.questionText.setText(faq.getQuestion());
         holder.answerText.setText(faq.getAnswer());
 
