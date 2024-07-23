@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MyFinance"
+rootProject.name = "DCI-Wallet"
 include(":app")
  

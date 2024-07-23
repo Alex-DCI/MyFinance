@@ -26,10 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditPinActivity extends AppCompatActivity {
-    List<List<ImageView>> pins;
-    List<EditText> editTexts;
-    Button applyButton;
-    ProfileManagementActivity.Profile profile;
+    private List<List<ImageView>> pins;
+    private List<EditText> editTexts;
+    private Button applyButton;
+    private ProfileManagementActivity.Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

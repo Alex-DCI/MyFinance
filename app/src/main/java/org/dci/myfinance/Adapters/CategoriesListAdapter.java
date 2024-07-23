@@ -22,9 +22,9 @@ public class CategoriesListAdapter extends RecyclerView.Adapter<CategoriesListAd
 
     public static class CategoriesListViewHolder extends RecyclerView.ViewHolder {
 
-        TextView categoryTextView;
-        ImageView deleteTransactionImage;
-        ImageView editTransactionImage;
+        private final TextView categoryTextView;
+        private final ImageView deleteTransactionImage;
+        private final ImageView editTransactionImage;
 
         public CategoriesListViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -35,10 +35,10 @@ public class CategoriesListAdapter extends RecyclerView.Adapter<CategoriesListAd
         }
     }
 
-    CategoriesManagementActivity context;
-    FilesOperations filesOperations;
-    boolean isIncome;
-    List<String> categoriesList;
+    private final CategoriesManagementActivity context;
+    private final FilesOperations filesOperations;
+    private final boolean isIncome;
+    private final List<String> categoriesList;
 
     public CategoriesListAdapter(CategoriesManagementActivity context, boolean isIncome) {
         this.context = context;
@@ -99,13 +99,13 @@ public class CategoriesListAdapter extends RecyclerView.Adapter<CategoriesListAd
 
     private void editCategory(int position, String newValue) {
         categoriesList.set(position, newValue);
-        filesOperations.setCategories(context, categoriesList, isIncome);
+        filesOperations.setCategories(categoriesList, isIncome);
         context.setAdapter();
     }
 
     private void deleteCategory(int index) {
         categoriesList.remove(index);
-        filesOperations.setCategories(context, categoriesList, isIncome);
+        filesOperations.setCategories(categoriesList, isIncome);
 
     }
 }

@@ -7,7 +7,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
@@ -75,9 +74,7 @@ public class Feedback extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle("Your request has been received")
                     .setMessage("You will soon receive an email with your request number.")
-                    .setNegativeButton(android.R.string.ok, ((dialog, which) -> {
-                        finish();
-                    }))
+                    .setNegativeButton(android.R.string.ok, ((dialog, which) -> finish()))
                     .show();
         }
     }

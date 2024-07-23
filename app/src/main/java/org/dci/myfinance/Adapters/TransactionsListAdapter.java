@@ -23,11 +23,11 @@ import java.util.List;
 public class TransactionsListAdapter extends RecyclerView.Adapter<TransactionsListAdapter.TransactionsListViewHolder> {
 
     public static class TransactionsListViewHolder extends RecyclerView.ViewHolder {
-        private TextView amountTextView;
-        private TextView infoTextView;
-        private TextView dateTextView;
-        private ImageView deleteTransactionImage;
-        private ImageView editTransactionImage;
+        private final TextView amountTextView;
+        private final TextView infoTextView;
+        private final TextView dateTextView;
+        private final ImageView deleteTransactionImage;
+        private final ImageView editTransactionImage;
 
         public TransactionsListViewHolder(@NonNull View itemView) {
             super(itemView);

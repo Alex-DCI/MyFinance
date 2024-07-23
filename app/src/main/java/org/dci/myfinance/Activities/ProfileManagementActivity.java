@@ -58,7 +58,7 @@ public class ProfileManagementActivity extends AppCompatActivity {
 
         public void setPinCode(Context context, String pinCode) {
             this.pinCode = pinCode;
-            FilesOperations.getInstance(context).setProfile(context, this);
+            FilesOperations.getInstance(context).setProfile(this);
         }
 
         public String getName() {
@@ -128,9 +128,7 @@ public class ProfileManagementActivity extends AppCompatActivity {
             findViewById(R.id.pins).setVisibility(View.INVISIBLE);
         }
 
-        findViewById(R.id.pins).setOnClickListener(v -> {
-            setEditTextVisibility();
-        });
+        findViewById(R.id.pins).setOnClickListener(v -> setEditTextVisibility());
 
         pinEditText.setOnFocusChangeListener((v, hasFocus) -> setOnFocusChangeListener(hasFocus));
 
@@ -226,7 +224,7 @@ public class ProfileManagementActivity extends AppCompatActivity {
         } else if (isEmailValid(email) && isNameValid(name)) {
             profile.setName(name);
             profile.setEmail(email);
-            filesOperations.setProfile(this, profile);
+            filesOperations.setProfile(profile);
             Toast.makeText(this, "Profile saved", Toast.LENGTH_SHORT).show();
             applyButton.setEnabled(false);
         } else {
@@ -284,7 +282,7 @@ public class ProfileManagementActivity extends AppCompatActivity {
                     filesOperations.setImage(this, bitmap);
                     setApplyButtonAvailability();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             } if (requestCode == 100) {
                 String pinString = data.getStringExtra("pinString");

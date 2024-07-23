@@ -7,7 +7,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "org.dci.myfinance.test"
+        applicationId = "org.dci.myfinance"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

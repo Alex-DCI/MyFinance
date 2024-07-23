@@ -42,11 +42,11 @@ public class FilesOperations {
 
     private FilesOperations(Context context) {
         directory = new ContextWrapper(context).getDir(context.getFilesDir().getName(), MODE_PRIVATE);
-        readProfile(context);
+        readProfile();
 
         incomesCategories = new ArrayList<>();
         expensesCategories = new ArrayList<>();
-        readCategories(context);
+        readCategories();
 
         readTransactions(context);
     }
@@ -62,22 +62,22 @@ public class FilesOperations {
         return isIncome ? incomesCategories : expensesCategories;
     }
 
-    public void setCategories(Context context, List<String> categories, boolean isIncome) {
+    public void setCategories(List<String> categories, boolean isIncome) {
         if (isIncome) {
             incomesCategories = categories;
         } else {
             expensesCategories = categories;
         }
-        writeCategories(context);
+        writeCategories();
     }
 
     public ProfileManagementActivity.Profile getProfile() {
         return profile;
     }
 
-    public void setProfile(Context context, ProfileManagementActivity.Profile profile) {
+    public void setProfile(ProfileManagementActivity.Profile profile) {
         this.profile = profile;
-        writeProfile(context);
+        writeProfile();
     }
 
     public List<Transaction> getTransactions() {
@@ -146,12 +146,12 @@ public class FilesOperations {
         }
     }
 
-    private void readCategories(Context context) {
+    private void readCategories() {
         File file = new File(directory, "categories.json");
         if (!file.exists()) {
             incomesCategories = List.of("Salary", "Bonus", "Others");
             expensesCategories = List.of("Food", "Transport", "Entertainment", "House", "Children", "Others");
-            writeCategories(context);
+            writeCategories();
             return;
         }
 
@@ -170,7 +170,7 @@ public class FilesOperations {
         }
     }
 
-    private void writeCategories(Context context) {
+    private void writeCategories() {
         File file = new File(directory, "categories.json");
         try (FileWriter writer = new FileWriter(file)) {
             JSONObject rootNode = new JSONObject();
@@ -182,7 +182,7 @@ public class FilesOperations {
         }
     }
 
-    private void writeProfile(Context context) {
+    private void writeProfile() {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File(directory, "profile.json");
         try (FileOutputStream fos = new FileOutputStream(file)) {
@@ -192,11 +192,11 @@ public class FilesOperations {
         }
     }
 
-    private void readProfile(Context context) {
+    private void readProfile() {
         File file = new File(directory, "profile.json");
         if (!file.exists()) {
             profile = new ProfileManagementActivity.Profile(null, null, "");
-            writeProfile(context);
+            writeProfile();
             return;
         }
         try (InputStream stream = Files.newInputStream(file.toPath())) {

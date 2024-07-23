@@ -21,7 +21,6 @@ public class StartActivity extends AppCompatActivity {
     private Button enterButton;
     private String input = "";
     private ImageView[] pins;
-    private ProfileManagementActivity.Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +63,7 @@ public class StartActivity extends AppCompatActivity {
 
         for (int i = 0; i < 10; i++) {
             int finalI = i;
-            numberButtons[i].setOnClickListener(v -> {
-                addNumber(finalI);
-            });
+            numberButtons[i].setOnClickListener(v -> addNumber(finalI));
         }
         clearButton.setOnClickListener(v -> {
             input = "";

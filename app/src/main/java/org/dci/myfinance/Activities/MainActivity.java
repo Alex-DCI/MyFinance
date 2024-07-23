@@ -20,8 +20,8 @@ import java.time.LocalTime;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    TextView amountTextView;
-    TextView greetingsText;
+    private TextView amountTextView;
+    private TextView greetingsText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +46,10 @@ public class MainActivity extends AppCompatActivity {
         setGreeting();
         setAmountValue();
 
-        categoriesManagemenButton.setOnClickListener(v -> {
-            startActivity(new Intent(this, CategoriesManagementActivity.class));
-        });
-
-        transactionsHistoryButton.setOnClickListener(v -> {
-            startActivity(new Intent(this, TransactionsHistoryActivity.class));
-        });
+        categoriesManagemenButton.setOnClickListener(v -> startActivity(new Intent(this, CategoriesManagementActivity.class)));
+        transactionsHistoryButton.setOnClickListener(v -> startActivity(new Intent(this, TransactionsHistoryActivity.class)));
+        profilesManagementButton.setOnClickListener(v -> startActivity(new Intent(this, ProfileManagementActivity.class)));
+        supportButton.setOnClickListener(v -> startActivity(new Intent(this, SupportActivity.class)));
 
         addExpenseImage.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AddTransaction.class);
@@ -64,14 +61,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, AddTransaction.class);
             intent.putExtra("isIncome", "true");
             startActivity(intent);
-        });
-
-        profilesManagementButton.setOnClickListener(v -> {
-            startActivity(new Intent(this, ProfileManagementActivity.class));
-        });
-
-        supportButton.setOnClickListener(v -> {
-            startActivity(new Intent(this, SupportActivity.class));
         });
     }
 

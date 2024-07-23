@@ -25,8 +25,8 @@ import java.util.List;
 public class TransactionsHistoryActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private RecyclerView recyclerView;
-    TextView currentBalance;
-    List<Transaction> transactionsList;
+    private TextView currentBalance;
+    private List<Transaction> transactionsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

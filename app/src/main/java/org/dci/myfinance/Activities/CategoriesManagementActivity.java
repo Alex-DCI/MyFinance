@@ -22,13 +22,12 @@ import java.util.List;
 
 public class CategoriesManagementActivity extends AppCompatActivity {
 
-    CategoriesManagementActivity context;
-    RecyclerView categoriesRecyclerView;
-    TabLayout tabLayout;
-    EditText addNewCategoryInput;
-    FilesOperations filesOperations;
-    List<String> currentCategoriesList;
-    boolean isIncome;
+    private RecyclerView categoriesRecyclerView;
+    private TabLayout tabLayout;
+    private EditText addNewCategoryInput;
+    private FilesOperations filesOperations;
+    private List<String> currentCategoriesList;
+    private boolean isIncome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,6 @@ public class CategoriesManagementActivity extends AppCompatActivity {
         ImageView backButton = findViewById(R.id.backImage);
 
         backButton.setOnClickListener(v -> finish());
-        context = this;
         filesOperations = FilesOperations.getInstance(this);
         isIncome = false;
         currentCategoriesList = filesOperations.getCategories(false);
@@ -100,7 +98,7 @@ public class CategoriesManagementActivity extends AppCompatActivity {
         addNewCategoryInput.setText("");
         addNewCategoryInput.setHint(getResources().getString(R.string.addANewCategory));
         currentCategoriesList.add(newValue);
-        filesOperations.setCategories(this, currentCategoriesList, isIncome);
+        filesOperations.setCategories(currentCategoriesList, isIncome);
         setAdapter();
     }
 

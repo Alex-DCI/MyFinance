@@ -26,7 +26,7 @@ import java.util.List;
 
 public class SupportActivity extends AppCompatActivity {
     private List<FAQ> questions;
-    Intent intent;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +40,7 @@ public class SupportActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.backImage).setOnClickListener(v -> finish());
-        findViewById(R.id.feedback).setOnClickListener(v -> {
-            startActivity(new Intent(this, Feedback.class));
-        });
+        findViewById(R.id.feedback).setOnClickListener(v -> startActivity(new Intent(this, Feedback.class)));
 
         findViewById(R.id.phoneTextView).setOnClickListener(v -> {
             String phone = "+490909399997";

@@ -19,8 +19,8 @@ import java.util.List;
 
 public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FAQViewHolder> {
 
-    private List<SupportActivity.FAQ> faqList;
-    private Context context;
+    private final List<SupportActivity.FAQ> faqList;
+    private final Context context;
 
     public FAQAdapter(List<SupportActivity.FAQ> faqList, Context context) {
         this.faqList = faqList;
@@ -76,7 +76,7 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FAQViewHolder> {
         return faqList.size();
     }
 
-    static class FAQViewHolder extends RecyclerView.ViewHolder {
+    public static class FAQViewHolder extends RecyclerView.ViewHolder {
         TextView questionText;
         TextView answerText;
 
