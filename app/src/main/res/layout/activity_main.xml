@@ -5,15 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#DCDCDC"
+    android:background="@color/background"
     tools:context=".Activities.MainActivity">
 
     <TextView
         android:id="@+id/greetingsText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="25dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
         android:textAlignment="center"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -23,48 +24,47 @@
 
     <TextView
         android:id="@+id/currentBalance"
-        android:layout_width="match_parent"
-        android:layout_height="30sp"
-        android:layout_marginLeft="25sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="25dp"
-        android:layout_marginRight="25sp"
+        android:layout_marginEnd="25dp"
         android:text="@string/currentBalance"
         android:textAlignment="center"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/greetingsText" />
+        app:layout_constraintTop_toBottomOf="@id/greetingsText" />
 
     <TextView
         android:id="@+id/amountTextView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="100sp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="25dp"
-        android:layout_marginRight="100sp"
+        android:layout_marginEnd="100dp"
         android:textAlignment="center"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentBalance" />
+        app:layout_constraintTop_toBottomOf="@id/currentBalance" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:layout_marginEnd="60dp"
-        android:orientation="horizontal"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/transactionsHistoryButton"
+        app:layout_constraintBottom_toTopOf="@id/transactionsHistoryButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountTextView">
+        app:layout_constraintTop_toBottomOf="@id/amountTextView">
 
         <ImageView
             android:id="@+id/addCircleImage"
-            android:layout_width="125sp"
-            android:layout_height="125sp"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:contentDescription="@string/addIncome"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -73,8 +73,8 @@
 
         <ImageView
             android:id="@+id/removeCircleImage"
-            android:layout_width="125sp"
-            android:layout_height="125sp"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:contentDescription="@string/addExpense"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -84,27 +84,25 @@
 
     <Button
         android:id="@+id/categoriesManagementButton"
-        android:layout_width="300sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="30sp"
-        android:paddingTop="15sp"
-        android:paddingRight="30sp"
-        android:paddingBottom="15sp"
+        android:paddingStart="25dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="25dp"
+        android:paddingBottom="10dp"
         android:text="@string/categoriesManagement"
         android:textAlignment="center"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintBottom_toTopOf="@id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_wrapBehaviorInParent="skipped" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="300sp"
-        android:layout_height="60sp"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:textAlignment="gravity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -133,15 +131,16 @@
 
     <Button
         android:id="@+id/transactionsHistoryButton"
-        android:layout_width="250sp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10sp"
-        android:paddingTop="10sp"
-        android:paddingBottom="10sp"
+        android:layout_marginBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:text="@string/transactionsHistory"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/categoriesManagementButton"
+        app:layout_constraintBottom_toTopOf="@id/categoriesManagementButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

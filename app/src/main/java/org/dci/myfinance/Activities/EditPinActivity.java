@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -79,6 +80,24 @@ public class EditPinActivity extends AppCompatActivity {
             finish();
         });
         findViewById(R.id.applyButton).setOnClickListener(v -> validateInput());
+
+        editTexts.get(0).setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_TAB && event.getAction() == KeyEvent.ACTION_DOWN) {
+                editTexts.get(1).setVisibility(View.VISIBLE);
+                editTexts.get(1).requestFocus();
+                return true;
+            }
+            return false;
+        });
+
+        editTexts.get(1).setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_TAB && event.getAction() == KeyEvent.ACTION_DOWN) {
+                editTexts.get(2).setVisibility(View.VISIBLE);
+                editTexts.get(2).requestFocus();
+                return true;
+            }
+            return false;
+        });
     }
 
     private void setOldPinDisabled() {
@@ -96,14 +115,13 @@ public class EditPinActivity extends AppCompatActivity {
             editText.setOnFocusChangeListener((v, hasFocus) -> {
                 if (hasFocus) {
                     editText.setVisibility(View.VISIBLE);
-                    editText.requestFocus();
                     editText.setCursorVisible(false);
                     editText.setBackgroundResource(R.drawable.edit_text_style);
                     InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                     imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
                 } else {
-                    editText.setVisibility(View.INVISIBLE);
-                    editText.setBackgroundColor(getColor(R.color.transparent));
+                    editText.setVisibility(View.GONE);
+                    editText.setBackgroundResource(android.R.color.transparent);
                 }
             });
         }
@@ -182,4 +200,5 @@ public class EditPinActivity extends AppCompatActivity {
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
+
 }

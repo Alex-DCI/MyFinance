@@ -1,0 +1,13 @@
+<resources>
+    <color name="colorPrimaryNight">#BB86FC</color>
+    <color name="colorPrimaryDarkNight">#3700B3</color>
+    <color name="colorAccentNight">#03DAC5</color>
+    <color name="background">#121212</color>
+    <color name="textColor">#FFFFFF</color>
+    <color name="buttonBackground">#BB86FC</color>
+    <color name="buttonText">#000000</color>
+    <color name="tabTextColor">#B0B0B0</color>
+    <color name="tabSelectedTextColor">#FFEB3B</color>
+    <color name="inputBackgroundColor">#424242</color>
+    <color name="inputFocusedBackgroundColor">#616161</color>
+</resources>

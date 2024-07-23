@@ -5,6 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:ignore="ButtonStyle, HardcodedText"
     tools:context=".Activities.StartActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,41 +23,45 @@
             android:id="@+id/newPin0"
             android:layout_width="35sp"
             android:layout_height="35sp"
+            android:contentDescription="@string/pincode"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/newPin1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/circle" />
+            android:src="@drawable/circle" />
 
         <ImageView
             android:id="@+id/newPin1"
             android:layout_width="35sp"
             android:layout_height="35sp"
+            android:contentDescription="@string/pincode"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/newPin2"
             app:layout_constraintStart_toEndOf="@id/newPin0"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/circle" />
+            android:src="@drawable/circle" />
 
         <ImageView
             android:id="@+id/newPin2"
             android:layout_width="35sp"
             android:layout_height="35sp"
+            android:contentDescription="@string/pincode"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/newPin3"
             app:layout_constraintStart_toEndOf="@id/newPin1"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/circle" />
+            android:src="@drawable/circle" />
 
         <ImageView
             android:id="@+id/newPin3"
             android:layout_width="35sp"
             android:layout_height="35sp"
+            android:contentDescription="@string/pincode"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/newPin2"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/circle" />
+            android:src="@drawable/circle" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
@@ -79,7 +85,11 @@
                 android:layout_marginHorizontal="10sp"
                 android:layout_marginVertical="10sp"
                 android:layout_weight="1"
-                android:text="7" />
+                android:background="@color/buttonBackground"
+                android:text="7"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/button8"
@@ -88,7 +98,10 @@
                 android:layout_marginHorizontal="10sp"
                 android:layout_marginVertical="10sp"
                 android:layout_weight="1"
-                android:text="8" />
+                android:background="@color/buttonBackground"
+                android:text="8"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/button9"
@@ -97,7 +110,10 @@
                 android:layout_marginHorizontal="10sp"
                 android:layout_marginVertical="10sp"
                 android:layout_weight="1"
-                android:text="9" />
+                android:background="@color/buttonBackground"
+                android:text="9"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -112,7 +128,10 @@
                 android:layout_marginHorizontal="10sp"
                 android:layout_marginVertical="10sp"
                 android:layout_weight="1"
-                android:text="4" />
+                android:background="@color/buttonBackground"
+                android:text="4"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/button5"
@@ -121,7 +140,10 @@
                 android:layout_marginHorizontal="10sp"
                 android:layout_marginVertical="10sp"
                 android:layout_weight="1"
-                android:text="5" />
+                android:background="@color/buttonBackground"
+                android:text="5"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/button6"
@@ -130,7 +152,10 @@
                 android:layout_marginHorizontal="10sp"
                 android:layout_marginVertical="10sp"
                 android:layout_weight="1"
-                android:text="6" />
+                android:background="@color/buttonBackground"
+                android:text="6"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -145,7 +170,10 @@
                 android:layout_marginHorizontal="10sp"
                 android:layout_marginVertical="10sp"
                 android:layout_weight="1"
-                android:text="1" />
+                android:background="@color/buttonBackground"
+                android:text="1"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/button2"
@@ -154,7 +182,10 @@
                 android:layout_marginHorizontal="10sp"
                 android:layout_marginVertical="10sp"
                 android:layout_weight="1"
-                android:text="2" />
+                android:background="@color/buttonBackground"
+                android:text="2"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/button3"
@@ -163,7 +194,10 @@
                 android:layout_marginHorizontal="10sp"
                 android:layout_marginVertical="10sp"
                 android:layout_weight="1"
-                android:text="3" />
+                android:background="@color/buttonBackground"
+                android:text="3"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -178,7 +212,10 @@
                 android:layout_marginHorizontal="10sp"
                 android:layout_marginVertical="10sp"
                 android:layout_weight="1"
-                android:text="@string/clear" />
+                android:background="@color/buttonBackground"
+                android:text="@string/clear"
+                android:textColor="@color/buttonText"
+                android:textSize="17sp" />
 
             <Button
                 android:id="@+id/button0"
@@ -187,7 +224,10 @@
                 android:layout_marginHorizontal="10sp"
                 android:layout_marginVertical="10sp"
                 android:layout_weight="1"
-                android:text="0" />
+                android:background="@color/buttonBackground"
+                android:text="0"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/backSpaceButton"
@@ -196,12 +236,16 @@
                 android:layout_marginHorizontal="10sp"
                 android:layout_marginVertical="10sp"
                 android:layout_weight="1"
+                android:background="@color/buttonBackground"
                 android:contentDescription="@string/backspace"
                 android:textAlignment="center"
-                app:icon="@android:drawable/ic_input_delete"
+                android:textColor="@color/buttonText"
+                android:textSize="18sp"
+                app:icon="@drawable/backspace"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
                 app:iconSize="26sp"
+                app:iconTint="@color/buttonText"
                 app:iconTintMode="src_in" />
         </LinearLayout>
     </LinearLayout>
@@ -213,6 +257,7 @@
         android:layout_marginTop="50dp"
         android:text="@string/enter_your_pin_code"
         android:textAlignment="center"
+        android:textColor="@color/textColor"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -225,7 +270,10 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25sp"
         android:layout_marginTop="50sp"
+        android:background="@color/buttonBackground"
         android:text="Enter"
+        android:textColor="@color/buttonText"
+        android:textSize="20sp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
